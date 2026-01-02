@@ -1,0 +1,870 @@
+{
+    "maxTier": 3,
+    "gridSize": 7,
+    "minServiceCoverage": 60,
+    "initialMoney": 30,
+    "populationParams": {
+        "taxPerPop": 0.25,
+        "happinessDecayPerPop": 0.04,
+        "maintenancePerPop": 0.08
+    },
+    "productParams": {
+        "decayRate": 0.05,
+        "spoilageThreshold": 24
+    },
+    "powerParams": {
+        "idleCostPerUnit": 0.15
+    },
+    "blueprintSlotCosts": {
+        "base": 15,
+        "multiplier": 1.6
+    },
+    "spawnWeights": {
+        "Residential": 0.35,
+        "Factory": 0.25,
+        "Shop": 0.2,
+        "Power": 0.2
+    },
+    "buildingStats": {
+        "Residential": {
+            "1": {
+                "baseRequirements": {
+                    "power": 1
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 2,
+                        "happiness": 40
+                    },
+                    "3": {
+                        "power": 3,
+                        "products": 2,
+                        "happiness": 60
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "population": 1
+                    },
+                    "2": {
+                        "population": 2
+                    },
+                    "3": {
+                        "population": 4,
+                        "happiness": 1
+                    }
+                },
+                "priority": 3,
+                "mergeStarReset": true
+            },
+            "2": {
+                "baseRequirements": {
+                    "power": 2,
+                    "products": 2
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 4,
+                        "products": 2
+                    },
+                    "3": {
+                        "power": 6,
+                        "products": 4,
+                        "happiness": 60
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "population": 4
+                    },
+                    "2": {
+                        "population": 8
+                    },
+                    "3": {
+                        "population": 14
+                    }
+                },
+                "priority": 3,
+                "mergeStarReset": true
+            },
+            "3": {
+                "baseRequirements": {
+                    "power": 5,
+                    "products": 4
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 10,
+                        "products": 6
+                    },
+                    "3": {
+                        "power": 16,
+                        "products": 12,
+                        "happiness": 75
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "population": 12
+                    },
+                    "2": {
+                        "population": 26
+                    },
+                    "3": {
+                        "population": 50
+                    }
+                },
+                "priority": 3,
+                "mergeStarReset": true
+            }
+        },
+        "Factory": {
+            "1": {
+                "baseRequirements": {
+                    "power": 2,
+                    "workforce": 1
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 4
+                    },
+                    "3": {
+                        "power": 7,
+                        "raw_goods": 2
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "raw_goods": 2
+                    },
+                    "2": {
+                        "raw_goods": 3
+                    },
+                    "3": {
+                        "raw_goods": 5
+                    }
+                },
+                "priority": 2,
+                "mergeStarReset": true
+            },
+            "2": {
+                "baseRequirements": {
+                    "power": 5,
+                    "workforce": 3
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 9
+                    },
+                    "3": {
+                        "power": 14,
+                        "raw_goods": 5
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "raw_goods": 5
+                    },
+                    "2": {
+                        "raw_goods": 8
+                    },
+                    "3": {
+                        "raw_goods": 12
+                    }
+                },
+                "priority": 2,
+                "mergeStarReset": true
+            },
+            "3": {
+                "baseRequirements": {
+                    "power": 12,
+                    "workforce": 8
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 20
+                    },
+                    "3": {
+                        "power": 30,
+                        "raw_goods": 10
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "raw_goods": 15
+                    },
+                    "2": {
+                        "raw_goods": 25
+                    },
+                    "3": {
+                        "raw_goods": 40
+                    }
+                },
+                "priority": 2,
+                "mergeStarReset": true
+            }
+        },
+        "Shop": {
+            "1": {
+                "baseRequirements": {
+                    "power": 1,
+                    "workforce": 1,
+                    "raw_goods": 1
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 2,
+                        "raw_goods": 2
+                    },
+                    "3": {
+                        "power": 4,
+                        "raw_goods": 4
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "products": 2,
+                        "money": 1
+                    },
+                    "2": {
+                        "products": 4,
+                        "money": 2
+                    },
+                    "3": {
+                        "products": 7,
+                        "money": 4
+                    }
+                },
+                "priority": 4,
+                "mergeStarReset": true
+            },
+            "2": {
+                "baseRequirements": {
+                    "power": 3,
+                    "workforce": 3,
+                    "raw_goods": 3
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 6,
+                        "raw_goods": 6
+                    },
+                    "3": {
+                        "power": 10,
+                        "raw_goods": 10
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "products": 6,
+                        "money": 3
+                    },
+                    "2": {
+                        "products": 10,
+                        "money": 6
+                    },
+                    "3": {
+                        "products": 16,
+                        "money": 10
+                    }
+                },
+                "priority": 4,
+                "mergeStarReset": true
+            },
+            "3": {
+                "baseRequirements": {
+                    "power": 8,
+                    "workforce": 6,
+                    "raw_goods": 8
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 15,
+                        "raw_goods": 14
+                    },
+                    "3": {
+                        "power": 24,
+                        "raw_goods": 22
+                    }
+                },
+                "produces": {
+                    "1": {
+                        "products": 14,
+                        "money": 8
+                    },
+                    "2": {
+                        "products": 25,
+                        "money": 16
+                    },
+                    "3": {
+                        "products": 40,
+                        "money": 32
+                    }
+                },
+                "priority": 4,
+                "mergeStarReset": true
+            }
+        },
+        "Warehouse": {
+            "1": {
+                "baseRequirements": {
+                    "power": 1
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 2
+                    },
+                    "3": {
+                        "power": 3
+                    }
+                },
+                "produces": {},
+                "priority": 10
+            }
+        },
+        "Power": {
+            "1": {
+                "baseRequirements": {
+                    "money": 1
+                },
+                "produces": {
+                    "1": {
+                        "power": 3
+                    },
+                    "2": {
+                        "power": 3
+                    },
+                    "3": {
+                        "power": 3
+                    }
+                },
+                "priority": 0
+            },
+            "2": {
+                "baseRequirements": {
+                    "money": 4,
+                    "workforce": 3
+                },
+                "produces": {
+                    "1": {
+                        "power": 9
+                    },
+                    "2": {
+                        "power": 9
+                    },
+                    "3": {
+                        "power": 9
+                    }
+                },
+                "priority": 0,
+                "fixedCost": {
+                    "money": 1
+                }
+            },
+            "3": {
+                "baseRequirements": {
+                    "money": 10,
+                    "workforce": 5
+                },
+                "produces": {
+                    "1": {
+                        "power": 28
+                    },
+                    "2": {
+                        "power": 28
+                    },
+                    "3": {
+                        "power": 28
+                    }
+                },
+                "priority": 0,
+                "fixedCost": {
+                    "money": 6
+                }
+            }
+        }
+    },
+    "startingBlueprints": [
+        "residential_t1",
+        "factory_t1",
+        "power_t1"
+    ],
+    "blueprints": {
+        "residential_t1": {
+            "id": "residential_t1",
+            "buildingType": "Residential",
+            "tier": 1,
+            "name": "Small House",
+            "description": "Provide housing for your workforce.",
+            "slotCost": 1,
+            "buildCost": 2,
+            "unlockConditions": []
+        },
+        "factory_t1": {
+            "id": "factory_t1",
+            "buildingType": "Factory",
+            "tier": 1,
+            "name": "Workshop",
+            "description": "Basic production facility.",
+            "slotCost": 1,
+            "buildCost": 5,
+            "unlockConditions": []
+        },
+        "power_t1": {
+            "id": "power_t1",
+            "buildingType": "Power",
+            "tier": 1,
+            "name": "Wind Turbine",
+            "description": "Clean but limited power.",
+            "slotCost": 1,
+            "buildCost": 5,
+            "unlockConditions": []
+        },
+        "shop_t1": {
+            "id": "shop_t1",
+            "buildingType": "Shop",
+            "tier": 1,
+            "name": "Market Stall",
+            "description": "Sell products for profit.",
+            "slotCost": 1,
+            "buildCost": 3,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "resource",
+                        "target": "raw_goods",
+                        "value": 3,
+                        "comparison": ">="
+                    }
+                ],
+                [
+                    {
+                        "type": "resource",
+                        "target": "population",
+                        "value": 6,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "warehouse_t1": {
+            "id": "warehouse_t1",
+            "buildingType": "Warehouse",
+            "tier": 1,
+            "name": "Storage Shed",
+            "description": "Preserves up to 2 Raw Goods between turns.",
+            "slotCost": 1,
+            "buildCost": 3,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "resource",
+                        "target": "raw_goods",
+                        "value": 5,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "residential_t2": {
+            "id": "residential_t2",
+            "buildingType": "Residential",
+            "tier": 2,
+            "name": "Apartments",
+            "description": "Higher density housing. Powerful, but demands stability.",
+            "slotCost": 1,
+            "buildCost": 8,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "stat",
+                        "target": "unemployed",
+                        "value": 0,
+                        "comparison": "==",
+                        "consecutiveTurns": 2
+                    },
+                    {
+                        "type": "resource",
+                        "target": "power",
+                        "value": 5,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "factory_t2": {
+            "id": "factory_t2",
+            "buildingType": "Factory",
+            "tier": 2,
+            "name": "Factory",
+            "description": "Mass production. Needs a real workforce to justify it.",
+            "slotCost": 1,
+            "buildCost": 15,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "resource",
+                        "target": "raw_goods",
+                        "value": 6,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
+                        "target": "population",
+                        "value": 10,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "power_t2": {
+            "id": "power_t2",
+            "buildingType": "Power",
+            "tier": 2,
+            "name": "Coal Plant",
+            "description": "High output, high upkeep. A commitment.",
+            "slotCost": 1,
+            "buildCost": 15,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "resource",
+                        "target": "power",
+                        "value": 0,
+                        "comparison": "<"
+                    }
+                ],
+                [
+                    {
+                        "type": "building_count",
+                        "target": "Power",
+                        "value": 2,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "shop_t2": {
+            "id": "shop_t2",
+            "buildingType": "Shop",
+            "tier": 2,
+            "name": "Supermarket",
+            "description": "Retail giant. Big profit, big appetite.",
+            "slotCost": 1,
+            "buildCost": 20,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "resource",
+                        "target": "money",
+                        "value": 25,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
+                        "target": "happiness",
+                        "value": 55,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "residential_t3": {
+            "id": "residential_t3",
+            "buildingType": "Residential",
+            "tier": 3,
+            "name": "Skyscraper",
+            "description": "Massive population. Only sustainable in a mature economy.",
+            "slotCost": 1,
+            "buildCost": 40,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "turn",
+                        "target": "turn",
+                        "value": 20,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "stat",
+                        "target": "total_blueprints",
+                        "value": 5,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
+                        "target": "population",
+                        "value": 30,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "factory_t3": {
+            "id": "factory_t3",
+            "buildingType": "Factory",
+            "tier": 3,
+            "name": "Industrial Complex",
+            "description": "Extreme production. Eats power and budget fast.",
+            "slotCost": 1,
+            "buildCost": 50,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "turn",
+                        "target": "turn",
+                        "value": 20,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "stat",
+                        "target": "total_blueprints",
+                        "value": 5,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
+                        "target": "raw_goods",
+                        "value": 16,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "shop_t3": {
+            "id": "shop_t3",
+            "buildingType": "Shop",
+            "tier": 3,
+            "name": "Mall",
+            "description": "Consumer paradise. Huge money if you can feed it.",
+            "slotCost": 1,
+            "buildCost": 60,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "turn",
+                        "target": "turn",
+                        "value": 20,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "stat",
+                        "target": "total_blueprints",
+                        "value": 5,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
+                        "target": "money",
+                        "value": 60,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "power_t3": {
+            "id": "power_t3",
+            "buildingType": "Power",
+            "tier": 3,
+            "name": "Nuclear Plant",
+            "description": "Grid domination. Devours upkeep and demands a real economy.",
+            "slotCost": 1,
+            "buildCost": 75,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "turn",
+                        "target": "turn",
+                        "value": 20,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "stat",
+                        "target": "total_blueprints",
+                        "value": 5,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
+                        "target": "power",
+                        "value": 20,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        }
+    },
+    "statusEffects": [
+        {
+            "id": "brownout",
+            "name": "Brownout",
+            "description": "Insufficient power is reducing city efficiency.",
+            "trigger": [
+                {
+                    "type": "resource",
+                    "target": "powerCapacity",
+                    "comparison": "<",
+                    "value": "powerDemand"
+                }
+            ],
+            "effects": [
+                {
+                    "type": "productionMultiplier",
+                    "target": "all",
+                    "value": 0.75
+                }
+            ],
+            "duration": "while_triggered",
+            "stacking": false
+        },
+        {
+            "id": "economic_boom",
+            "name": "Economic Boom",
+            "trigger": [
+                {
+                    "type": "resource",
+                    "target": "money",
+                    "comparison": ">=",
+                    "value": 100
+                },
+                {
+                    "type": "resource",
+                    "target": "happiness",
+                    "comparison": ">=",
+                    "value": 80
+                }
+            ],
+            "effects": [
+                {
+                    "type": "productionMultiplier",
+                    "target": "Shop",
+                    "value": 1.25
+                }
+            ],
+            "duration": "while_triggered",
+            "stacking": false
+        },
+        {
+            "id": "unemployment_crisis",
+            "name": "Unemployment Crisis",
+            "description": "High unemployment is causing unrest.",
+            "trigger": [
+                {
+                    "type": "stat",
+                    "target": "unemployed",
+                    "comparison": ">=",
+                    "value": 3
+                }
+            ],
+            "effects": [
+                {
+                    "type": "resourceDelta",
+                    "target": "happiness",
+                    "value": -2
+                }
+            ],
+            "duration": "while_triggered",
+            "stacking": true
+        },
+        {
+            "id": "service_collapse",
+            "name": "Service Collapse",
+            "description": "Essential services are failing.",
+            "trigger": [
+                {
+                    "type": "stat",
+                    "target": "serviceCoverage",
+                    "comparison": "<",
+                    "value": 60
+                }
+            ],
+            "effects": [
+                {
+                    "type": "resourceDelta",
+                    "target": "happiness",
+                    "value": -5
+                }
+            ],
+            "duration": "while_triggered",
+            "stacking": false
+        },
+        {
+            "id": "poor_services",
+            "name": "Poor Services",
+            "description": "Services are struggling to meet demand.",
+            "trigger": [
+                {
+                    "type": "stat",
+                    "target": "serviceCoverage",
+                    "comparison": ">=",
+                    "value": 60
+                },
+                {
+                    "type": "stat",
+                    "target": "serviceCoverage",
+                    "comparison": "<",
+                    "value": 80
+                }
+            ],
+            "effects": [
+                {
+                    "type": "resourceDelta",
+                    "target": "happiness",
+                    "value": -2
+                }
+            ],
+            "duration": "while_triggered",
+            "stacking": false
+        },
+        {
+            "id": "strained_services",
+            "name": "Strained Services",
+            "description": "Services are slightly overwhelmed.",
+            "trigger": [
+                {
+                    "type": "stat",
+                    "target": "serviceCoverage",
+                    "comparison": ">=",
+                    "value": 80
+                },
+                {
+                    "type": "stat",
+                    "target": "serviceCoverage",
+                    "comparison": "<",
+                    "value": 100
+                }
+            ],
+            "effects": [
+                {
+                    "type": "resourceDelta",
+                    "target": "happiness",
+                    "value": -1
+                }
+            ],
+            "duration": "while_triggered",
+            "stacking": false
+        },
+        {
+            "id": "excellent_services",
+            "name": "Excellent Services",
+            "description": "Citizens are happy with the abundance of services.",
+            "trigger": [
+                {
+                    "type": "stat",
+                    "target": "serviceCoverage",
+                    "comparison": ">=",
+                    "value": 100
+                }
+            ],
+            "effects": [
+                {
+                    "type": "resourceDelta",
+                    "target": "happiness",
+                    "value": 1
+                }
+            ],
+            "duration": "while_triggered",
+            "stacking": false
+        }
+    ]
+}

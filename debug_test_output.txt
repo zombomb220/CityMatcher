@@ -1,0 +1,132 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90m/Users/jorcox/Documents/CityMatcher[39m
+
+[90mstdout[2m | src/logic/simulation.phases.test.ts[2m > [22m[2mSimulation Phases Comprehensive[2m > [22m[2m1. Iterative Stability & Cycles[2m > [22m[2mshould resolve mutual sustenance (Res <-> Factory)
+[22m[39mEnabled: Power_0_0 at T1
+Enabled: Factory_0_2 at T1
+Enabled: Residential_0_1 at T1
+Upgraded Factory_0_2 to Star 2
+Failed Star 2 for Residential_0_1: Missing power. Cost: {"power":2} Avail: 0
+
+[90mstdout[2m | src/logic/simulation.phases.test.ts[2m > [22m[2mSimulation Phases Comprehensive[2m > [22m[2m2. Priority & Starvation Resolution[2m > [22m[2mshould starve Low Priority buildings first
+[22m[39mEnabled: Power_0_0 at T1
+
+[90mstdout[2m | src/logic/simulation.phases.test.ts[2m > [22m[2mSimulation Phases Comprehensive[2m > [22m[2m3. Star Upgrade Logic[2m > [22m[2mshould not upgrade if star requirements unmet
+[22m[39mEnabled: Power_0_0 at T1
+
+[90mstdout[2m | src/logic/simulation.phases.test.ts[2m > [22m[2mSimulation Phases Comprehensive[2m > [22m[2m4. Special Mechanics[2m > [22m[2mshould handle Warehouse carryover correctly
+[22m[39mEnabled: Warehouse_0_0 at T1
+Upgraded Warehouse_0_0 to Star 2
+Enabled: Warehouse_0_0 at T1
+Upgraded Warehouse_0_0 to Star 2
+
+[90mstdout[2m | src/logic/simulation.phases.test.ts[2m > [22m[2mSimulation Phases Comprehensive[2m > [22m[2m4. Special Mechanics[2m > [22m[2mshould calculate Power Plant stress utilization
+[22m[39mEnabled: Power_0_0 at T1
+Enabled: Power_0_0 at T1
+Enabled: Power_0_0 at T1
+
+ [31m❯[39m src/logic/simulation.phases.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[32m 24[2mms[22m[39m
+       [32m✓[39m should resolve mutual sustenance (Res <-> Factory)[32m 5[2mms[22m[39m
+       [32m✓[39m should disable cyclical group if external dependency missing[32m 1[2mms[22m[39m
+[31m       [31m×[31m should starve Low Priority buildings first[39m[32m 7[2mms[22m[39m
+[31m       [31m×[31m should not upgrade if star requirements unmet[39m[32m 4[2mms[22m[39m
+[31m       [31m×[31m should skip Star 3 if Star 2 failed[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should handle Warehouse carryover correctly[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should calculate Power Plant stress utilization[39m[32m 1[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 5 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/logic/simulation.phases.test.ts[2m > [22mSimulation Phases Comprehensive[2m > [22m2. Priority & Starvation Resolution[2m > [22mshould starve Low Priority buildings first
+[31m[1mAssertionError[22m: expected 0 to be greater than 0[39m
+[36m [2m❯[22m src/logic/simulation.phases.test.ts:[2m130:43[22m[39m
+    [90m128| [39m            [34mrunSimulation[39m(grid[33m,[39m city)[33m;[39m
+    [90m129| [39m
+    [90m130| [39m            [34mexpect[39m(grid[[34m0[39m][[34m1[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBeGreaterThan[39m([34m0[39m)[33m;[39m
+    [90m   | [39m                                          [31m^[39m
+    [90m131| [39m            [34mexpect[39m(grid[[34m0[39m][[34m2[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBeGreaterThan[39m([34m0[39m)[33m;[39m
+    [90m132| [39m            [34mexpect[39m(grid[[34m0[39m][[34m3[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBeGreaterThan[39m([34m0[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/logic/simulation.phases.test.ts[2m > [22mSimulation Phases Comprehensive[2m > [22m3. Star Upgrade Logic[2m > [22mshould not upgrade if star requirements unmet
+[31m[1mAssertionError[22m: expected +0 to be 2 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 2[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m src/logic/simulation.phases.test.ts:[2m167:43[22m[39m
+    [90m165| [39m            [34mrunSimulation[39m(grid[33m,[39m city)[33m;[39m
+    [90m166| [39m
+    [90m167| [39m            [34mexpect[39m(grid[[34m0[39m][[34m1[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBe[39m([34m2[39m)[33m;[39m
+    [90m   | [39m                                          [31m^[39m
+    [90m168| [39m        })[33m;[39m
+    [90m169| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/logic/simulation.phases.test.ts[2m > [22mSimulation Phases Comprehensive[2m > [22m3. Star Upgrade Logic[2m > [22mshould skip Star 3 if Star 2 failed
+[31m[1mAssertionError[22m: expected +0 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m src/logic/simulation.phases.test.ts:[2m187:43[22m[39m
+    [90m185| [39m            [34mrunSimulation[39m(grid[33m,[39m city)[33m;[39m
+    [90m186| [39m
+    [90m187| [39m            [34mexpect[39m(grid[[34m0[39m][[34m0[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m   | [39m                                          [31m^[39m
+    [90m188| [39m        })[33m;[39m
+    [90m189| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/logic/simulation.phases.test.ts[2m > [22mSimulation Phases Comprehensive[2m > [22m4. Special Mechanics[2m > [22mshould handle Warehouse carryover correctly
+[31m[1mAssertionError[22m: expected +0 to be 2 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 2[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m src/logic/simulation.phases.test.ts:[2m240:41[22m[39m
+    [90m238| [39m
+    [90m239| [39m            [90m// Warehouse Cap is 2.[39m
+    [90m240| [39m            [34mexpect[39m(res2[33m.[39mgoodsAvailable)[33m.[39m[34mtoBe[39m([34m2[39m)[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m241| [39m        })[33m;[39m
+    [90m242| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/logic/simulation.phases.test.ts[2m > [22mSimulation Phases Comprehensive[2m > [22m4. Special Mechanics[2m > [22mshould calculate Power Plant stress utilization
+[31m[1mAssertionError[22m: expected 1 to be 3 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 3[39m
+[31m+ 1[39m
+
+[36m [2m❯[22m src/logic/simulation.phases.test.ts:[2m276:44[22m[39m
+    [90m274| [39m
+    [90m275| [39m            [34mrunSimulation[39m(grid2[33m,[39m { [33m...[39mcity })[33m;[39m
+    [90m276| [39m            [34mexpect[39m(grid2[[34m0[39m][[34m0[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBe[39m([34m3[39m)[33m;[39m [90m// 100% utilized[39m
+    [90m   | [39m                                           [31m^[39m
+    [90m277| [39m        })[33m;[39m
+    [90m278| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (7)[39m
+[2m   Start at [22m 18:11:58
+[2m   Duration [22m 1.15s[2m (transform 222ms, setup 0ms, import 259ms, tests 24ms, environment 650ms)[22m
+

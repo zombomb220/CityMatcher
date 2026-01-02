@@ -1,0 +1,54 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90m/Users/jorcox/Documents/CityMatcher[39m
+
+ [31m❯[39m src/logic/simulation.stars.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 16[2mms[22m[39m
+[31m     [31m×[31m should upgrade Power Plant based on Utilization (Stress), not Money[39m[32m 12[2mms[22m[39m
+[31m     [31m×[31m should allocate resources competitively for Non-Power buildings[39m[32m 1[2mms[22m[39m
+     [32m✓[39m should respect priority in starvation[32m 1[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/logic/simulation.stars.test.ts[2m > [22mSimulation Star Scarcity Logic[2m > [22mshould upgrade Power Plant based on Utilization (Stress), not Money
+[31m[1mAssertionError[22m: expected 1 to be 3 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 3[39m
+[31m+ 1[39m
+
+[36m [2m❯[22m src/logic/simulation.stars.test.ts:[2m96:40[22m[39m
+    [90m 94| [39m
+    [90m 95| [39m        [34mrunSimulation[39m(gridC[33m,[39m cityC)[33m;[39m
+    [90m 96| [39m        [34mexpect[39m(gridC[[34m0[39m][[34m0[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBe[39m([34m3[39m)[33m;[39m [90m// 100% Util -> Star 3[39m
+    [90m   | [39m                                       [31m^[39m
+    [90m 97| [39m    })[33m;[39m
+    [90m 98| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/logic/simulation.stars.test.ts[2m > [22mSimulation Star Scarcity Logic[2m > [22mshould allocate resources competitively for Non-Power buildings
+[31m[1mAssertionError[22m: expected +0 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m src/logic/simulation.stars.test.ts:[2m121:39[22m[39m
+    [90m119| [39m        [34mrunSimulation[39m(grid[33m,[39m city)[33m;[39m
+    [90m120| [39m
+    [90m121| [39m        [34mexpect[39m(grid[[34m0[39m][[34m1[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m   | [39m                                      [31m^[39m
+    [90m122| [39m        [34mexpect[39m(grid[[34m0[39m][[34m2[39m][33m.[39mtile[33m.[39mstars)[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m123| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 18:03:49
+[2m   Duration [22m 1.05s[2m (transform 106ms, setup 0ms, import 131ms, tests 16ms, environment 704ms)[22m
+
