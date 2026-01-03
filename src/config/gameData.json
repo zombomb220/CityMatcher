@@ -2,11 +2,12 @@
     "maxTier": 3,
     "gridSize": 7,
     "minServiceCoverage": 60,
-    "initialMoney": 30,
+    "initialMoney": 60,
     "populationParams": {
         "taxPerPop": 0.25,
         "happinessDecayPerPop": 0.04,
-        "maintenancePerPop": 0.08
+        "maintenancePerPop": 0.08,
+        "productConsumptionRate": 0
     },
     "productParams": {
         "decayRate": 0.05,
@@ -20,10 +21,11 @@
         "multiplier": 1.6
     },
     "spawnWeights": {
-        "Residential": 0.35,
-        "Factory": 0.25,
+        "Residential": 0.3,
+        "Factory": 0.2,
         "Shop": 0.2,
-        "Power": 0.2
+        "Power": 0.2,
+        "Warehouse": 0.1
     },
     "buildingStats": {
         "Residential": {
@@ -318,7 +320,49 @@
                         "power": 3
                     }
                 },
-                "produces": {},
+                "produces": {
+                    "1": {},
+                    "2": {},
+                    "3": {}
+                },
+                "priority": 10
+            },
+            "2": {
+                "baseRequirements": {
+                    "power": 2
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 4
+                    },
+                    "3": {
+                        "power": 6
+                    }
+                },
+                "produces": {
+                    "1": {},
+                    "2": {},
+                    "3": {}
+                },
+                "priority": 10
+            },
+            "3": {
+                "baseRequirements": {
+                    "power": 3
+                },
+                "starRequirements": {
+                    "2": {
+                        "power": 6
+                    },
+                    "3": {
+                        "power": 9
+                    }
+                },
+                "produces": {
+                    "1": {},
+                    "2": {},
+                    "3": {}
+                },
                 "priority": 10
             }
         },

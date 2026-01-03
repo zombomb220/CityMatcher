@@ -12,7 +12,7 @@ interface TileProps {
 }
 
 export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
-    const stats = BUILDING_STATS[tile.type][tile.tier];
+    const stats = BUILDING_STATS[tile.type][tile.tier as unknown as '1' | '2' | '3'];
     const [showTooltip, setShowTooltip] = React.useState(false);
     const currentStars = tile.stars || 0;
 
@@ -166,7 +166,7 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
                         <div className={clsx(currentStars === 0 && "opacity-50")}>
                             <div className="text-[9px] uppercase tracking-wider text-slate-500 font-bold mb-0.5">Base Cost (Required)</div>
                             <div className="text-slate-300">
-                                {formatRes(stats.baseRequirements) || <span className="text-slate-500 italic">None</span>}
+                                {formatRes(stats.baseRequirements || {}) || <span className="text-slate-500 italic">None</span>}
                             </div>
                         </div>
 
@@ -188,23 +188,7 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
                         )}
 
                         {/* IDLE / OPTIONAL UPKEEP INFO */}
-                        {stats.optionalUpkeep && (
-                            <div className={clsx("p-1.5 rounded border", tile.upkeepPaid ? "bg-indigo-900/20 border-indigo-500/30" : "bg-slate-800/30 border-slate-700")}>
-                                <div className="flex justify-between items-center text-xs">
-                                    <span className={clsx("font-bold", tile.upkeepPaid ? "text-indigo-300" : "text-slate-400")}>
-                                        Optional Boost {tile.upkeepPaid ? "(Active)" : "(Inactive)"}
-                                    </span>
-                                    <div className="flex items-center gap-1 text-[10px]">
-                                        <span className="text-red-300">-{stats.optionalUpkeep.cost.money}g</span>
-                                    </div>
-                                </div>
-                                <div className="text-[10px] text-slate-400 mt-1 pl-1 border-l-2 border-indigo-500/20">
-                                    Effects:
-                                    {stats.optionalUpkeep.effects.starBonus && <span className="block text-indigo-200">+{stats.optionalUpkeep.effects.starBonus} Star Level</span>}
-                                    {stats.optionalUpkeep.effects.outputMultiplier && <span className="block text-indigo-200">x{stats.optionalUpkeep.effects.outputMultiplier} Output</span>}
-                                </div>
-                            </div>
-                        )}
+                        {/* Optional Upkeep Removed */}
 
                         {/* SECTION 4: NEXT LEVEL */}
                         {/* Only show if we can upgrade AND we are not at 0 stars (which overrides with 'Disabled') */}

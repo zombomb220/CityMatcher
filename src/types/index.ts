@@ -29,6 +29,13 @@ export interface Tile {
     upkeepPaid?: boolean;
 }
 
+export interface PlacedTileWithHistory {
+    r: number;
+    c: number;
+    tile: Tile;
+    prevStars?: number; // Optional
+}
+
 export interface Cell {
     r: number;
     c: number;

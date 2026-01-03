@@ -1,17 +1,21 @@
-import type { BuildingConfig, CityState, StatusEffect } from '../types';
+import type { CityState, StatusEffect } from '../types';
 import gameData from './gameData.json';
+import { GameConfigSchema } from './schema';
 
-export const MAX_TIER = gameData.maxTier;
-export const GRID_SIZE = gameData.gridSize;
-export const MIN_SERVICE_COVERAGE = gameData.minServiceCoverage;
-export const INITIAL_MONEY = gameData.initialMoney;
-// UNEMPLOYED_PENALTY removed as it's now handled by Status Effects
-export const STATUS_EFFECTS = (gameData.statusEffects || []) as unknown as StatusEffect[];
+// Validate Configuration at Startup
+const parsedConfig = GameConfigSchema.parse(gameData);
 
-export const SPAWN_WEIGHTS = gameData.spawnWeights;
+export const MAX_TIER = parsedConfig.maxTier;
+export const GRID_SIZE = parsedConfig.gridSize;
+export const MIN_SERVICE_COVERAGE = parsedConfig.minServiceCoverage;
+export const INITIAL_MONEY = parsedConfig.initialMoney;
+
+export const STATUS_EFFECTS = (parsedConfig.statusEffects || []) as unknown as StatusEffect[];
+
+export const SPAWN_WEIGHTS = parsedConfig.spawnWeights;
 
 export const STARTING_CITY: CityState = {
-    money: 30,
+    money: INITIAL_MONEY,
     population: 0,
     happiness: 50,
     workforceAvailable: 0,
@@ -27,32 +31,18 @@ export const STARTING_CITY: CityState = {
     activeStatusEffects: [],
     history: [],
     blueprintState: {
-        unlockedIds: [
-            "residential_t1",
-            "factory_t1",
-            "power_t1",
-            "shop_t1",
-            "residential_t2",
-            "power_t2"
-        ],
-        activeSlots: [
-            "residential_t1",
-            "factory_t1",
-            "power_t1"
-        ],
+        unlockedIds: [...parsedConfig.startingBlueprints],
+        activeSlots: [...parsedConfig.startingBlueprints], // Start with all starting blueprints in slots
         maxSlots: 6,
         hasPlacedThisTurn: false,
-        newUnlocks: [
-            "shop_t1",
-            "residential_t2",
-            "power_t2"
-        ]
+        newUnlocks: []
     }
 };
 
-export const BUILDING_STATS: BuildingConfig = gameData.buildingStats as unknown as BuildingConfig;
+// Exporting validated stats
+export const BUILDING_STATS = parsedConfig.buildingStats;
 
-export const POPULATION_PARAMS = gameData.populationParams;
-export const PRODUCT_PARAMS = gameData.productParams;
-export const POWER_PARAMS = gameData.powerParams;
-export const BLUEPRINT_SLOT_COSTS = gameData.blueprintSlotCosts;
+export const POPULATION_PARAMS = parsedConfig.populationParams;
+export const PRODUCT_PARAMS = parsedConfig.productParams;
+export const POWER_PARAMS = parsedConfig.powerParams;
+export const BLUEPRINT_SLOT_COSTS = parsedConfig.blueprintSlotCosts;
