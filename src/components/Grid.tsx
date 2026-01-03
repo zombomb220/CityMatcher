@@ -92,7 +92,15 @@ export const Grid: React.FC = () => {
                                     }
                                 }}
                                 onMouseEnter={() => setHoveredPos({ r: cell.r, c: cell.c })}
-                                onMouseLeave={() => setHoveredPos(null)}
+                                onMouseLeave={() => {
+                                    setHoveredPos(null);
+                                    // if (isSelected) setSelectedPos(null); 
+                                    // actually just clear it always to be safe/simple, or only if this cell was the selected one?
+                                    // simpler: if (isSelected) setSelectedPos(null);
+                                    if (isSelected) {
+                                        setSelectedPos(null);
+                                    }
+                                }}
                                 className={clsx(
                                     "w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center transition-colors relative",
                                     !cell.tile && canPlace ? "bg-slate-700 hover:bg-slate-600 cursor-pointer border-2 border-slate-600 border-dashed" : "bg-slate-800",
