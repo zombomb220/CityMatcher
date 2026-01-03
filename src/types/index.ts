@@ -27,6 +27,9 @@ export interface Tile {
     disabledReason?: string;
     missingReqs?: string;
     upkeepPaid?: boolean;
+    storage?: Record<string, number>;
+    lastTurnOutput?: Record<string, number>;
+    producedThisTurn?: Record<string, number>;
 }
 
 export interface PlacedTileWithHistory {
@@ -136,6 +139,7 @@ export interface BuildingStats {
         3: Resources;
     };
     priority: number;
+    influenceRadius?: number;
     mergeStarReset?: boolean;
     fixedCost?: Resources;
     optionalUpkeep?: {

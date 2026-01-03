@@ -5,7 +5,7 @@ import { DesignerPage } from './pages/DesignerPage';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<GamePage />} />
         <Route path="/designer" element={<DesignerPage />} />

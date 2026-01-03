@@ -11,6 +11,7 @@ const BuildingStarStatsSchema = z.object({
     starRequirements: z.record(z.enum(["2", "3"]), ResourceAmountSchema).optional(),
     produces: z.record(z.enum(["1", "2", "3"]), ResourceAmountSchema),
     priority: z.number().default(10),
+    influenceRadius: z.number().optional(),
     mergeStarReset: z.boolean().default(true),
     fixedCost: ResourceAmountSchema.optional(),
 });

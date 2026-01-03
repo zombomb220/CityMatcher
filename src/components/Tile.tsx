@@ -9,11 +9,14 @@ interface TileProps {
     tile: TileType;
     onClick?: () => void;
     className?: string; // Additional classes for the container
+    isInfluenced?: boolean;
+    isHovered?: boolean;
+    isGhost?: boolean;
+    isSelected?: boolean;
 }
 
-export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
+export const Tile: React.FC<TileProps> = ({ tile, onClick, className, isInfluenced, isHovered, isGhost, isSelected }) => {
     const stats = BUILDING_STATS[tile.type][tile.tier as unknown as '1' | '2' | '3'];
-    const [showTooltip, setShowTooltip] = React.useState(false);
     const currentStars = tile.stars || 0;
 
     const getColors = (type: BuildingType) => {
@@ -34,25 +37,15 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
         }
     };
 
-    // --- Tooltip Logic ---
-
-
-    // Requirements for NEXT level
-
-
-    // Current Production - Safely handle missing tiers (fallback to T1 if active, or empty)
-    const currentProd = currentStars > 0
-        ? (stats.produces[currentStars as 1 | 2 | 3] || stats.produces[1] || {})
-        : {};
+    // Helper to identify resource locality
+    const isLocal = (res: string) => !['money', 'population', 'happiness'].includes(res);
 
     // Formatting helpers
-    const formatRes = (res: Record<string, number>) => Object.entries(res).map(([k, v]) => `${k}:${v}`).join(', ');
+    const formatRes = (res: Record<string, number>) => Object.entries(res).map(([k, v]) =>
+        `${k}:${v}${isLocal(k) ? ' (Local)' : ''}`
+    ).join(', ');
 
-    const producesStr = formatRes(currentProd);
-
-
-
-
+    // ... (rest of icon logic)
     const getDisabledIcon = () => {
         if (!tile.disabledReason) return <AlertTriangle size={24} className="text-red-500 animate-pulse" />;
 
@@ -66,21 +59,29 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
         }
     };
 
+    // Show tooltip if hovered primarily OR if part of influence chain? 
+    // Usually only direct hover. Grid handles updating isHovered logic.
+    // We rely on parent for hover state logic if needed, but for tooltip, local mouse enter works.
+
     return (
         <div
             onClick={onClick}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
             className={clsx(
                 "w-full h-full rounded-md border-b-4 relative cursor-pointer transition-transform hover:scale-105 active:scale-95 shadow-md select-none",
-                className
+                className,
+                // Blue Ring for Inspector (Existing Influence)
+                isInfluenced && !isGhost && !isHovered && "ring-2 ring-blue-400 scale-95 opacity-90",
+                // Green Ring for Ghost (Placement Preview)
+                isGhost && !isHovered && "ring-2 ring-emerald-400 scale-95",
+                isHovered && "ring-2 ring-white z-10"
             )}
         >
             {/* Main Content */}
             <div className={clsx(
-                "w-full h-full flex flex-col items-center justify-center rounded-md relative", // Added relative for stars positioning
+                "w-full h-full flex flex-col items-center justify-center rounded-md relative",
                 getColors(tile.type),
-                currentStars === 0 && "opacity-50 grayscale"
+                currentStars === 0 && "opacity-50 grayscale",
+                isGhost && "opacity-75" // Slight transparency for ghost overlap indication
             )}>
                 <div className="flex flex-col items-center">
                     {getIcon(tile.type)}
@@ -94,6 +95,11 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
                             <div key={i} className="text-yellow-300 drop-shadow-md pb-1">★</div>
                         ))}
                     </div>
+                )}
+
+                {/* Local Storage Indicator? (Optional nice to have) */}
+                {tile.storage && Object.keys(tile.storage).some(k => (tile.storage?.[k] || 0) > 0) && (
+                    <div className="absolute bottom-1 right-1 w-2 h-2 bg-blue-300 rounded-full shadow-sm animate-pulse" title="Has Stored Resources"></div>
                 )}
 
                 {/* Upkeep Paid Overlay */}
@@ -112,55 +118,50 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
             )}
 
             {/* Tooltip */}
-            {showTooltip && (
+            {isSelected && (
                 <div className="absolute bottom-full mb-2 z-50 w-64 p-3 bg-slate-900 text-white text-xs rounded-lg shadow-xl pointer-events-none border border-slate-700 opacity-100 font-sans">
                     {/* Header */}
                     <div className="mb-2 border-b border-slate-700 pb-2 flex justify-between items-start">
                         <div>
                             <div className="font-bold text-sm text-slate-100">{tile.type}</div>
                             <div className="text-slate-400 text-[10px] uppercase tracking-wide">Tier {tile.tier} Architecture</div>
+                            {stats.influenceRadius && <div className="text-blue-400 text-[9px] mt-0.5">Influence Radius: {stats.influenceRadius}</div>}
                         </div>
                         <div className="flex flex-col items-end">
+                            {/* ... Status Badge ... */}
                             <div className={clsx("font-bold text-[10px] px-1.5 py-0.5 rounded",
                                 currentStars === 3 ? "bg-yellow-500/20 text-yellow-300" :
                                     currentStars === 2 ? "bg-blue-500/20 text-blue-300" :
                                         currentStars === 1 ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"
                             )}>
-                                {tile.type === BuildingType.Power ? (
-                                    currentStars === 3 ? "OVERLOADED" :
-                                        currentStars === 2 ? "HIGH LOAD" :
-                                            currentStars === 1 ? "ACTIVE" : "OFFLINE"
-                                ) : (
-                                    currentStars === 3 ? "OPTIMAL" :
-                                        currentStars === 2 ? "EFFICIENT" :
-                                            currentStars === 1 ? "STANDARD" : "DISABLED"
-                                )}
+                                {currentStars === 0 ? "DISABLED" : `${currentStars}★`}
                             </div>
-                            {currentStars > 0 && <div className="text-yellow-500 text-[10px] mt-0.5">{currentStars}★ Quality</div>}
                         </div>
                     </div>
 
                     <div className="space-y-3">
-                        {/* Status/Error for Disabled */}
                         {currentStars === 0 && (
                             <div className="p-2 bg-red-950/30 border border-red-900/50 rounded text-red-300 flex items-start gap-2">
                                 <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
                                 <div>
                                     <div className="font-bold">Building Disabled</div>
-                                    <div className="text-[10px] opacity-80">Missing: <span className="uppercase font-bold">{tile.disabledReason || "Unknown"}</span></div>
+                                    <div className="text-[10px] opacity-80">Reason: <span className="uppercase font-bold">{tile.disabledReason || "Unknown"}</span></div>
+                                    {tile.missingReqs && <div className="text-[10px] opacity-80 mt-1">Missing: {tile.missingReqs}</div>}
                                 </div>
                             </div>
                         )}
 
-                        {/* SECTION 1: PERFORMANCE (What you get) */}
-                        {currentStars > 0 && producesStr && (
+                        {/* Storage Check */}
+                        {tile.storage && Object.keys(tile.storage).length > 0 && (
                             <div>
-                                <div className="text-[9px] uppercase tracking-wider text-slate-500 font-bold mb-0.5">Performance (Output)</div>
-                                <div className="text-slate-200 bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
-                                    {producesStr}
+                                <div className="text-[9px] uppercase tracking-wider text-blue-400 font-bold mb-0.5">Local Storage</div>
+                                <div className="text-slate-300 bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
+                                    {formatRes(tile.storage as Record<string, number>)}
                                 </div>
                             </div>
                         )}
+
+                        {/* ... Sections ... */}
 
                         {/* SECTION 2: BASE COST (Fixed) */}
                         <div className={clsx(currentStars === 0 && "opacity-50")}>
@@ -173,9 +174,9 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
                         {/* SECTION 3: STAR COST (Variable) */}
                         {currentStars > 1 && (
                             <div className="animate-in fade-in slide-in-from-left-1">
-                                <div className="flex justify-between items-center mb-0.5">
+                                <div className="mb-0.5">
                                     <span className="text-[9px] uppercase tracking-wider text-yellow-500/80 font-bold">
-                                        {tile.type === BuildingType.Power ? "Grid Penalty" : "Quality Cost"} ({currentStars}★)
+                                        Quality Cost ({currentStars}★)
                                     </span>
                                 </div>
                                 <div className="text-yellow-200/90 bg-yellow-900/10 p-1.5 rounded border border-yellow-900/30">
@@ -187,32 +188,17 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className }) => {
                             </div>
                         )}
 
-                        {/* IDLE / OPTIONAL UPKEEP INFO */}
-                        {/* Optional Upkeep Removed */}
-
                         {/* SECTION 4: NEXT LEVEL */}
-                        {/* Only show if we can upgrade AND we are not at 0 stars (which overrides with 'Disabled') */}
                         {currentStars > 0 && currentStars < 3 && (
                             <div className="pt-2 border-t border-slate-700/50">
                                 <div className="flex justify-between items-center mb-1">
                                     <span className="text-[9px] uppercase tracking-wider text-blue-400 font-bold">
                                         Next Level ({currentStars + 1}★)
                                     </span>
-                                    {tile.missingReqs ? (
-                                        <span className="text-[10px] text-red-400 font-bold bg-red-950/30 px-1 rounded">MISSING: {tile.missingReqs.toUpperCase()}</span>
-                                    ) : (
-                                        <span className="text-[10px] text-green-400 font-bold">Ready for Upgrade</span>
-                                    )}
                                 </div>
                                 <div className="text-[10px] text-slate-400">
                                     Additional Cost: {stats.starRequirements && stats.starRequirements[(currentStars + 1) as 2 | 3] ? formatRes(stats.starRequirements[(currentStars + 1) as 2 | 3]) : "None"}
                                 </div>
-                            </div>
-                        )}
-
-                        {tile.type === BuildingType.Power && currentStars === 3 && (
-                            <div className="pt-2 border-t border-red-900/30 text-red-400 text-[10px] italic text-center">
-                                Warning: Grid is under high stress.
                             </div>
                         )}
                     </div>

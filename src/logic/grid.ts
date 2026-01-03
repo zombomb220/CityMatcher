@@ -133,3 +133,29 @@ export const resolveMerge = (grid: Cell[][], startR: number, startC: number): bo
 
     return mergeHappened;
 };
+
+export const getCoordsInRadius = (size: number, r: number, c: number, radius: number): { r: number, c: number }[] => {
+    const results: { r: number, c: number }[] = [];
+
+    // Chebyshev distance: Max(dx, dy) <= radius
+    const rMin = Math.max(0, r - radius);
+    const rMax = Math.min(size - 1, r + radius);
+    const cMin = Math.max(0, c - radius);
+    const cMax = Math.min(size - 1, c + radius);
+
+    for (let i = rMin; i <= rMax; i++) {
+        for (let j = cMin; j <= cMax; j++) {
+            results.push({ r: i, c: j });
+        }
+    }
+
+    return results;
+};
+
+export const getTilesInRadius = (grid: Cell[][], r: number, c: number, radius: number): { r: number, c: number, tile: Tile }[] => {
+    // Reuse the geometric logic but filter for tiles
+    const coords = getCoordsInRadius(grid.length, r, c, radius);
+    return coords
+        .map(coord => ({ r: coord.r, c: coord.c, tile: grid[coord.r][coord.c].tile }))
+        .filter((item): item is { r: number, c: number, tile: Tile } => item.tile !== null);
+};

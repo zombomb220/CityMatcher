@@ -46,17 +46,21 @@
                 },
                 "produces": {
                     "1": {
-                        "population": 1
+                        "population": 1,
+                        "workforce": 1
                     },
                     "2": {
-                        "population": 2
+                        "population": 2,
+                        "workforce": 2
                     },
                     "3": {
                         "population": 4,
-                        "happiness": 1
+                        "happiness": 1,
+                        "workforce": 4
                     }
                 },
-                "priority": 3,
+                "priority": 1,
+                "influenceRadius": 2,
                 "mergeStarReset": true
             },
             "2": {
@@ -77,16 +81,20 @@
                 },
                 "produces": {
                     "1": {
-                        "population": 4
+                        "population": 4,
+                        "workforce": 4
                     },
                     "2": {
-                        "population": 8
+                        "population": 8,
+                        "workforce": 8
                     },
                     "3": {
-                        "population": 14
+                        "population": 14,
+                        "workforce": 14
                     }
                 },
-                "priority": 3,
+                "priority": 1,
+                "influenceRadius": 3,
                 "mergeStarReset": true
             },
             "3": {
@@ -107,16 +115,20 @@
                 },
                 "produces": {
                     "1": {
-                        "population": 12
+                        "population": 12,
+                        "workforce": 12
                     },
                     "2": {
-                        "population": 26
+                        "population": 26,
+                        "workforce": 26
                     },
                     "3": {
-                        "population": 50
+                        "population": 50,
+                        "workforce": 50
                     }
                 },
-                "priority": 3,
+                "priority": 1,
+                "influenceRadius": 4,
                 "mergeStarReset": true
             }
         },
@@ -147,6 +159,7 @@
                     }
                 },
                 "priority": 2,
+                "influenceRadius": 2,
                 "mergeStarReset": true
             },
             "2": {
@@ -175,6 +188,7 @@
                     }
                 },
                 "priority": 2,
+                "influenceRadius": 3,
                 "mergeStarReset": true
             },
             "3": {
@@ -203,6 +217,7 @@
                     }
                 },
                 "priority": 2,
+                "influenceRadius": 4,
                 "mergeStarReset": true
             }
         },
@@ -237,7 +252,8 @@
                         "money": 4
                     }
                 },
-                "priority": 4,
+                "priority": 3,
+                "influenceRadius": 2,
                 "mergeStarReset": true
             },
             "2": {
@@ -270,7 +286,8 @@
                         "money": 10
                     }
                 },
-                "priority": 4,
+                "priority": 3,
+                "influenceRadius": 3,
                 "mergeStarReset": true
             },
             "3": {
@@ -303,7 +320,8 @@
                         "money": 32
                     }
                 },
-                "priority": 4,
+                "priority": 3,
+                "influenceRadius": 4,
                 "mergeStarReset": true
             }
         },
@@ -325,7 +343,8 @@
                     "2": {},
                     "3": {}
                 },
-                "priority": 10
+                "priority": 10,
+                "influenceRadius": 2
             },
             "2": {
                 "baseRequirements": {
@@ -344,7 +363,8 @@
                     "2": {},
                     "3": {}
                 },
-                "priority": 10
+                "priority": 10,
+                "influenceRadius": 3
             },
             "3": {
                 "baseRequirements": {
@@ -363,7 +383,8 @@
                     "2": {},
                     "3": {}
                 },
-                "priority": 10
+                "priority": 10,
+                "influenceRadius": 4
             }
         },
         "Power": {
@@ -382,7 +403,8 @@
                         "power": 3
                     }
                 },
-                "priority": 0
+                "priority": 0,
+                "influenceRadius": 3
             },
             "2": {
                 "baseRequirements": {
@@ -401,6 +423,7 @@
                     }
                 },
                 "priority": 0,
+                "influenceRadius": 4,
                 "fixedCost": {
                     "money": 1
                 }
@@ -422,6 +445,7 @@
                     }
                 },
                 "priority": 0,
+                "influenceRadius": 5,
                 "fixedCost": {
                     "money": 6
                 }
