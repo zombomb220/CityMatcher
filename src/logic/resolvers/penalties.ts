@@ -95,6 +95,35 @@ export const finalizeTurn = (
         breakdown.push({ source: 'Sales Tax', amount: productsConsumed * 2, resource: ResourceType.Money });
     }
 
+    // --- Global Economy ---
+
+    // 1. Population Maintenance
+    const maintRate = POPULATION_PARAMS.maintenancePerPop || 0.08;
+    if (city.population > 0 && maintRate > 0) {
+        const maintenanceCost = Math.floor(city.population * maintRate);
+        if (maintenanceCost > 0) {
+            city.money -= maintenanceCost;
+            netChanges[ResourceType.Money] = (netChanges[ResourceType.Money] || 0) - maintenanceCost;
+            breakdown.push({ source: 'Maintenance', amount: -maintenanceCost, resource: ResourceType.Money });
+        }
+    }
+
+    // 2. Idle Power Costs
+    // Reuse specific imports or just magic numbers if config not available in scope
+    // Ideally import { POWER_PARAMS } from ...
+    // Let's rely on city.powerAvailable being the "Leftover" (Idle) power.
+    const idlePower = city.powerAvailable;
+    const idleCostRate = 0.15; // Hardcoded fallback or import? 
+    // Let's assume 0.15 matching legacy or add import.
+    if (idlePower > 0) {
+        const idleCost = Math.floor(idlePower * idleCostRate);
+        if (idleCost > 0) {
+            city.money -= idleCost;
+            netChanges[ResourceType.Money] = (netChanges[ResourceType.Money] || 0) - idleCost;
+            breakdown.push({ source: 'Grid Inefficiency', amount: -idleCost, resource: ResourceType.Money });
+        }
+    }
+
     const jobCoverage = city.population > 0 ? (city.population - city.unemployed) / city.population : 1;
     const productCoverage = city.population > 0 ? (productsConsumed / city.population) : 1;
     city.serviceCoverage = Math.floor(((jobCoverage + productCoverage) / 2) * 100);

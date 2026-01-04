@@ -69,11 +69,14 @@ export const Tile: React.FC<TileProps> = ({ tile, onClick, className, isInfluenc
             className={clsx(
                 "w-full h-full rounded-md border-b-4 relative cursor-pointer transition-transform hover:scale-105 active:scale-95 shadow-md select-none",
                 className,
-                // Blue Ring for Inspector (Existing Influence)
+                // Influence/Selection Rings (Priority)
                 isInfluenced && !isGhost && !isHovered && "ring-2 ring-blue-400 scale-95 opacity-90",
-                // Green Ring for Ghost (Placement Preview)
                 isGhost && !isHovered && "ring-2 ring-emerald-400 scale-95",
-                isHovered && "ring-2 ring-white z-10"
+                isHovered && "ring-2 ring-white z-10",
+
+                // Star Level Visuals (if not selected/hovered to avoid clutter)
+                !isHovered && !isInfluenced && !isGhost && currentStars === 3 && "shadow-[0_0_15px_rgba(234,179,8,0.5)] border-yellow-500",
+                !isHovered && !isInfluenced && !isGhost && currentStars === 2 && "shadow-[0_0_8px_rgba(96,165,250,0.4)] border-blue-400"
             )}
         >
             {/* Main Content */}

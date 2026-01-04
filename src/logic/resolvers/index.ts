@@ -1,12 +1,13 @@
 
-import type { Cell, CityState, SimulationResult } from '../../types';
-// ResourceType removed
+import type { Cell, CityState, SimulationResult, Tile } from '../../types';
 import { resetFlows } from './turnInit';
 import { applyStatusEffects } from './statusEffects';
-import { produceResources } from './production';
+import { resolveProduction } from './production';
 import { resolveConsumption } from './consumption';
+import { resolveStorage } from './storage';
 import { finalizeTurn } from './penalties';
 import { checkUnlockConditions, checkSlotUnlock } from '../blueprintManager';
+import { ResourceType } from '../../types';
 
 export const runSimulation = (grid: Cell[][], currentCity: CityState): SimulationResult => {
     // 0. Setup Tracking
@@ -26,20 +27,27 @@ export const runSimulation = (grid: Cell[][], currentCity: CityState): Simulatio
     // 2. Apply Status Effects (Modifiers)
     const { productionMultipliers, disabledTypes } = applyStatusEffects(city, trackChange);
 
-    // Collect Tiles
-    const tiles: any[] = [];
+    // Collect Tiles for Iteration
+    const tiles: { r: number, c: number, tile: Tile }[] = [];
     const buildingCounts: Record<string, number> = {};
+
     for (let r = 0; r < grid.length; r++) {
         for (let c = 0; c < grid[0].length; c++) {
             const t = grid[r][c].tile;
             if (t) {
-                t.disabled = false; // Reset disabled state (will be re-evaluated)
+                // Pre-turn cleanup?
+                // Don't reset stars here, wait for consumption to validate them.
+                t.disabled = false;
                 t.disabledReason = undefined;
-                delete t.missingReqs; // Clear missing reqs too
 
-                // If it was disabled (Level 0), try to restart at Level 1
-                if (t.stars === 0) {
-                    t.stars = 1;
+                // If previously disabled, we assume it attempts to start (Star 1 potential).
+                // If it was Star 0, `resolveProduction` treats it as Star 1 for output.
+
+                // Check Status Effect Disabling
+                if (disabledTypes.has(t.type)) {
+                    t.disabled = true;
+                    t.disabledReason = "Status Effect";
+                    t.stars = 0;
                 }
 
                 tiles.push({ r, c, tile: t });
@@ -48,39 +56,58 @@ export const runSimulation = (grid: Cell[][], currentCity: CityState): Simulatio
         }
     }
 
-    // 3. Production Phase (Add to pools)
-    produceResources(city, tiles, productionMultipliers, disabledTypes, trackChange);
+    // 3. Production Phase (Generate Resources)
+    // - Global: Added to City.
+    // - Local: Added to tile.producedThisTurn.
+    resolveProduction(city, tiles, productionMultipliers, trackChange);
 
-    // 4. Consumption Phase (Draw from pools)
-    resolveConsumption(city, tiles, trackChange, buildingAlerts);
+    // 4. Consumption Phase (Satisfy Demands)
+    // - Consumes from Neighbors (producedThisTurn > storage).
+    // - Updates tile.stars / tile.disabled.
+    resolveConsumption(city, grid, tiles, trackChange, buildingAlerts);
 
-    // 5. Finalize (Stats & Triggers)
+    // 5. Storage Phase (Logistics & Export)
+    // - Moves producedThisTurn -> storage.
+    // - Handles Caps.
+    // - Handles Export (if T3 Warehouse).
+    resolveStorage(city, tiles, trackChange);
+
+    // 6. Finalize (Stats & Triggers)
+
+    // Aggregation Step: 
+    // Since we used Local Storage, `city.rawGoodsAvailable` and `city.productsAvailable`
+    // are currently NOT updated (they are persistent stocks in `city`, but we operated on Tiles).
+    // We should Sync: City.Stock = Sum(Tile.Storage).
+    // This allows UI to show total available.
+
+    let totalRaw = 0;
+    let totalProducts = 0;
+    for (const { tile } of tiles) {
+        if (tile.storage) {
+            totalRaw += tile.storage[ResourceType.RawGoods] || 0;
+            totalProducts += tile.storage[ResourceType.Products] || 0;
+        }
+    }
+    // Update City "Available" counters to match reality
+    // Note: netChanges tracks deltas, but specific totals might drift if not synced.
+    // Let's force sync for correctness.
+    city.rawGoodsAvailable = totalRaw;
+    city.productsAvailable = totalProducts;
+
     const result = finalizeTurn(city, buildingCounts, netChanges, breakdown, buildingAlerts);
 
-    // 6. Check Blueprints & Unlocks (Post-Turn)
-    // We check against the FINAL state of the city (after production/consumption)
+    // 7. Unlocks
     const newUnlocks = checkUnlockConditions(result.city, buildingCounts);
     if (newUnlocks.length > 0) {
-        // Filter out already unlocked ones just in case checkUnlockConditions didn't (it does, but safety first)
         const reallyNew = newUnlocks.filter(id => !result.city.blueprintState.unlockedIds.includes(id));
-
         if (reallyNew.length > 0) {
-            result.city.blueprintState.unlockedIds = [...result.city.blueprintState.unlockedIds, ...reallyNew];
-            // Add to newUnlocks list for UI notification
-            result.city.blueprintState.newUnlocks = [...result.city.blueprintState.newUnlocks, ...reallyNew];
+            result.city.blueprintState.unlockedIds.push(...reallyNew);
+            result.city.blueprintState.newUnlocks.push(...reallyNew);
         }
     }
 
-    // Check Slot Unlock (Event-based logic, effectively)
     if (checkSlotUnlock(result.city)) {
-        // If true, it means we met criteria to gain a slot.
-        // We probably need a flag to track if we ALREADY gave this bonus? 
-        // checkSlotUnlock implementation checks "if maxSlots >= 4 return false".
-        // So it's safe to call repeatedly until condition met, then once met, it bumps maxSlots.
-        // Wait, if it returns true, we bump. Next turn, maxSlots is 4. checkSlotUnlock returns false. Correct.
         result.city.blueprintState.maxSlots += 1;
-        // Optional: Add notification for slot unlock?
-        // Maybe add a special ID to newUnlocks?
         result.city.blueprintState.newUnlocks.push('SLOT_UPGRADE');
     }
 

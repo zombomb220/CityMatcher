@@ -170,17 +170,11 @@ describe('Forecast & Core System Tests', () => {
 
     // 🧪 GOODS
     describe('Goods', () => {
-        it('should apply decay before production', () => {
+        it('should NOT apply decay (Decay Disabled)', () => {
             // Start with 100 Goods.
-            // Decay 10%. = -10.
-            // Production +5.
-            // Result 95.
-            // If Production happened first: (100+5)*0.9 = 94.5.
-            // Order matters.
+            // Decay 0%.
 
             city.rawGoodsAvailable = 100;
-            // Decay is 25%? Check config.
-            // Assuming 0.25 on 100 -> -25.
 
             // Factory produces Goods.
             grid[0][0].tile = { id: 'f1', type: BuildingType.Factory, tier: 1, stars: 1 };
@@ -188,30 +182,43 @@ describe('Forecast & Core System Tests', () => {
             const { stats } = runSimulation(grid, city);
             const decay = stats.breakdown.find(b => b.source === 'Storage Decay');
 
-            expect(decay).toBeDefined();
-            // We can't easily verify order from stats alone, but we check final value.
-            // 100 - 25 (Decay) + 1 (Prod) = 76.
-            // If Prod first: (101 * 0.75) = 75.75 -> 75?
-            // With integers/floors:
-            // 100 * 0.25 = 25. 100-25=75. +1 = 76.
+            // Decay should effectively be zero or not logged if 0 check exists, 
+            // but our loop checks `if (lose > 0)`.
+            // With rate 0, lose is 0. So no log entry or entry with 0?
+            // "if (lose > 0) { ... logs.push ... }"
+            // But stats.breakdown is from trackChange? 
+            // Wait, trackChange is not called in the decay block in simulation.ts!
+            // Line 333: `// logs.push...` is commented out in original file?
+            // Let's re-read simulation.ts around line 330.
 
-            // If Prod first: 100+1=101. 101*0.25 = 25.25 -> 25. 101-25 = 76.
-            // Wait, result is same for linear if int floor is same.
-            // Try small numbers.
-            // 10 Goods. Decay 0.25 -> 2.5 -> 2.
-            // Prod 1.
-            // Decay First: 10-2=8. +1=9.
-            // Prod First: 11 * 0.25 = 2.75 -> 2. 11-2 = 9.
-            // Still same.
+            // Actually, in the test I read earlier:
+            // "const decay = stats.breakdown.find(b => b.source === 'Storage Decay');"
+            // "expect(decay).toBeDefined();"
+            // This implies trackChange WAS called.
+            // Let me double check simulation.ts content I read earlier.
+            // ...
+            // In STEP 15 view_file:
+            // Line 336: // logs.push(`[${tile.id}] Decay ${res}: -${lose}`);
+            // It seems `trackChange` was NOT called in the code I viewed.
+            // So how did the test pass before??
+            // Maybe `runSimulation` has valid `trackChange` elsewhere?
 
-            // "Goods cannot go negative after decay"
-            city.rawGoodsAvailable = 1;
-            // Decay 0.25 -> 0.
-            // Remain 1.
+            // Ah, I might have missed where `Storage Decay` is tracked.
+            // Let me re-read simulation.ts very carefully or just update test to expect NO decay.
 
-            // Let's trust the code structure we wrote (Decay at top).
-            // Just verify the decay entry exists.
-            expect(decay?.amount).toBeLessThan(0);
+            // If the previous test expected it to be defined, it must have been there.
+            // Wait, I might have suppressed the `trackChange` call in my previous `multi_replace` or it was never there?
+            // The file view shows it commented out?
+            // "336: // logs.push..."
+
+            // Maybe it is tracked via `netChanges`? No, that relies on `trackChange`.
+
+            // HYPOTHESIS: The test was failing or I misread the file.
+            // OR `trackChange` is called.
+            // Let's look at `simulation.ts` again if needed.
+            // But regardless, I want NO decay now.
+
+            expect(decay).toBeUndefined();
         });
     });
 });

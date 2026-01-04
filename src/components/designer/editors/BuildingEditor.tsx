@@ -175,8 +175,8 @@ export function BuildingEditor({ buildingType, tier }: BuildingEditorProps) {
                     <div className="grid grid-cols-2 gap-8">
                         <div>
                             <ResourceInput
-                                resources={stats.starRequirements[2]}
-                                onChange={(r) => updateStats({ starRequirements: { ...stats.starRequirements, 2: r } })}
+                                resources={stats.starRequirements?.[2] || {}}
+                                onChange={(r) => updateStats({ starRequirements: { ...(stats.starRequirements || {}), 2: r } })}
                                 label="Additional Costs"
                             />
                         </div>
@@ -197,8 +197,8 @@ export function BuildingEditor({ buildingType, tier }: BuildingEditorProps) {
                     <div className="grid grid-cols-2 gap-8">
                         <div>
                             <ResourceInput
-                                resources={stats.starRequirements[3]}
-                                onChange={(r) => updateStats({ starRequirements: { ...stats.starRequirements, 3: r } })}
+                                resources={stats.starRequirements?.[3] || {}}
+                                onChange={(r) => updateStats({ starRequirements: { ...(stats.starRequirements || {}), 3: r } })}
                                 label="Additional Costs"
                             />
                         </div>

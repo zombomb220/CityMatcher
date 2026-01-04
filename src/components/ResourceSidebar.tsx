@@ -12,7 +12,11 @@ import { STATUS_EFFECTS } from '../config/buildingStats';
 const cloneGrid = (grid: Cell[][]): Cell[][] => {
     return grid.map(row => row.map(cell => ({
         ...cell,
-        tile: cell.tile ? { ...cell.tile } : null
+        tile: cell.tile ? {
+            ...cell.tile,
+            storage: cell.tile.storage ? { ...cell.tile.storage } : undefined,
+            producedThisTurn: cell.tile.producedThisTurn ? { ...cell.tile.producedThisTurn } : undefined
+        } : null
     })));
 };
 

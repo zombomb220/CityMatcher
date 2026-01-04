@@ -9,7 +9,8 @@ export const INITIAL_MONEY = 30;
 export const POPULATION_PARAMS = {
     "taxPerPop": 0.25,
     "happinessDecayPerPop": 0.04,
-    "maintenancePerPop": 0.08
+    "maintenancePerPop": 0.08,
+    "productConsumptionRate": 1.0
 };
 
 export const PRODUCT_PARAMS = {

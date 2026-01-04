@@ -10,7 +10,7 @@
         "productConsumptionRate": 0
     },
     "productParams": {
-        "decayRate": 0.05,
+        "decayRate": 0,
         "spoilageThreshold": 24
     },
     "powerParams": {
@@ -35,28 +35,27 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 2,
-                        "happiness": 40
+                        "power": 3,
+                        "products": 3
                     },
                     "3": {
                         "power": 3,
-                        "products": 2,
-                        "happiness": 60
+                        "products": 6
                     }
                 },
                 "produces": {
                     "1": {
-                        "population": 1,
-                        "workforce": 1
-                    },
-                    "2": {
                         "population": 2,
                         "workforce": 2
                     },
-                    "3": {
+                    "2": {
                         "population": 4,
-                        "happiness": 1,
                         "workforce": 4
+                    },
+                    "3": {
+                        "population": 8,
+                        "happiness": 3,
+                        "workforce": 8
                     }
                 },
                 "priority": 1,
@@ -70,27 +69,27 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 4,
-                        "products": 2
+                        "power": 6,
+                        "products": 7
                     },
                     "3": {
-                        "power": 6,
+                        "power": 7,
                         "products": 4,
                         "happiness": 60
                     }
                 },
                 "produces": {
                     "1": {
-                        "population": 4,
-                        "workforce": 4
+                        "population": 10,
+                        "workforce": 10
                     },
                     "2": {
-                        "population": 8,
-                        "workforce": 8
+                        "population": 18,
+                        "workforce": 18
                     },
                     "3": {
-                        "population": 14,
-                        "workforce": 14
+                        "population": 24,
+                        "workforce": 24
                     }
                 },
                 "priority": 1,
@@ -104,12 +103,12 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 10,
-                        "products": 6
+                        "power": 9,
+                        "products": 10
                     },
                     "3": {
-                        "power": 16,
-                        "products": 12,
+                        "power": 18,
+                        "products": 15,
                         "happiness": 75
                     }
                 },
@@ -140,11 +139,12 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 4
+                        "power": 3,
+                        "workforce": 2
                     },
                     "3": {
-                        "power": 7,
-                        "raw_goods": 2
+                        "power": 6,
+                        "workforce": 3
                     }
                 },
                 "produces": {
@@ -169,11 +169,12 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 9
+                        "power": 7,
+                        "workforce": 4
                     },
                     "3": {
-                        "power": 14,
-                        "raw_goods": 5
+                        "power": 13,
+                        "workforce": 5
                     }
                 },
                 "produces": {
@@ -198,11 +199,12 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 20
+                        "power": 16,
+                        "workforce": 12
                     },
                     "3": {
-                        "power": 30,
-                        "raw_goods": 10
+                        "power": 28,
+                        "workforce": 12
                     }
                 },
                 "produces": {
@@ -230,12 +232,13 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 2,
-                        "raw_goods": 2
+                        "raw_goods": 2,
+                        "workforce": 3
                     },
                     "3": {
-                        "power": 4,
-                        "raw_goods": 4
+                        "power": 2,
+                        "raw_goods": 4,
+                        "workforce": 6
                     }
                 },
                 "produces": {
@@ -264,12 +267,13 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 6,
-                        "raw_goods": 6
+                        "raw_goods": 5,
+                        "workforce": 4
                     },
                     "3": {
-                        "power": 10,
-                        "raw_goods": 10
+                        "power": 5,
+                        "raw_goods": 9,
+                        "workforce": 6
                     }
                 },
                 "produces": {
@@ -298,12 +302,13 @@
                 },
                 "starRequirements": {
                     "2": {
-                        "power": 15,
-                        "raw_goods": 14
+                        "raw_goods": 12,
+                        "workforce": 7
                     },
                     "3": {
-                        "power": 24,
-                        "raw_goods": 22
+                        "power": 12,
+                        "raw_goods": 20,
+                        "workforce": 10
                     }
                 },
                 "produces": {
@@ -328,7 +333,8 @@
         "Warehouse": {
             "1": {
                 "baseRequirements": {
-                    "power": 1
+                    "power": 1,
+                    "workforce": 1
                 },
                 "starRequirements": {
                     "2": {
@@ -348,7 +354,8 @@
             },
             "2": {
                 "baseRequirements": {
-                    "power": 2
+                    "power": 2,
+                    "workforce": 2
                 },
                 "starRequirements": {
                     "2": {
@@ -368,7 +375,8 @@
             },
             "3": {
                 "baseRequirements": {
-                    "power": 3
+                    "power": 3,
+                    "workforce": 3
                 },
                 "starRequirements": {
                     "2": {
@@ -392,15 +400,19 @@
                 "baseRequirements": {
                     "money": 1
                 },
+                "starRequirements": {
+                    "2": {},
+                    "3": {}
+                },
                 "produces": {
                     "1": {
-                        "power": 3
+                        "power": 9
                     },
                     "2": {
-                        "power": 3
+                        "power": 9
                     },
                     "3": {
-                        "power": 3
+                        "power": 9
                     }
                 },
                 "priority": 0,
@@ -409,17 +421,21 @@
             "2": {
                 "baseRequirements": {
                     "money": 4,
-                    "workforce": 3
+                    "workforce": 2
+                },
+                "starRequirements": {
+                    "2": {},
+                    "3": {}
                 },
                 "produces": {
                     "1": {
-                        "power": 9
+                        "power": 20
                     },
                     "2": {
-                        "power": 9
+                        "power": 20
                     },
                     "3": {
-                        "power": 9
+                        "power": 20
                     }
                 },
                 "priority": 0,
@@ -433,15 +449,19 @@
                     "money": 10,
                     "workforce": 5
                 },
+                "starRequirements": {
+                    "2": {},
+                    "3": {}
+                },
                 "produces": {
                     "1": {
-                        "power": 28
+                        "power": 50
                     },
                     "2": {
-                        "power": 28
+                        "power": 50
                     },
                     "3": {
-                        "power": 28
+                        "power": 50
                     }
                 },
                 "priority": 0,
@@ -520,7 +540,7 @@
             "buildingType": "Warehouse",
             "tier": 1,
             "name": "Storage Shed",
-            "description": "Preserves up to 2 Raw Goods between turns.",
+            "description": "Preserves up to 24 Raw Goods/Products.",
             "slotCost": 1,
             "buildCost": 3,
             "unlockConditions": [
@@ -529,6 +549,50 @@
                         "type": "resource",
                         "target": "raw_goods",
                         "value": 5,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "warehouse_t2": {
+            "id": "warehouse_t2",
+            "buildingType": "Warehouse",
+            "tier": 2,
+            "name": "Distribution Center",
+            "description": "Larger range. Logistics Hub.",
+            "slotCost": 1,
+            "buildCost": 8,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "resource",
+                        "target": "raw_goods",
+                        "value": 15,
+                        "comparison": ">="
+                    }
+                ]
+            ]
+        },
+        "warehouse_t3": {
+            "id": "warehouse_t3",
+            "buildingType": "Warehouse",
+            "tier": 3,
+            "name": "Export Terminal",
+            "description": "Global Logistics. AUTO-EXPORTS excess goods for Money.",
+            "slotCost": 1,
+            "buildCost": 25,
+            "unlockConditions": [
+                [
+                    {
+                        "type": "resource",
+                        "target": "money",
+                        "value": 50,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
+                        "target": "raw_goods",
+                        "value": 20,
                         "comparison": ">="
                     }
                 ]
@@ -545,11 +609,10 @@
             "unlockConditions": [
                 [
                     {
-                        "type": "stat",
-                        "target": "unemployed",
-                        "value": 0,
-                        "comparison": "==",
-                        "consecutiveTurns": 2
+                        "type": "resource",
+                        "target": "population",
+                        "value": 8,
+                        "comparison": ">="
                     },
                     {
                         "type": "resource",
@@ -573,13 +636,13 @@
                     {
                         "type": "resource",
                         "target": "raw_goods",
-                        "value": 6,
+                        "value": 10,
                         "comparison": ">="
                     },
                     {
                         "type": "resource",
-                        "target": "population",
-                        "value": 10,
+                        "target": "workforce",
+                        "value": 5,
                         "comparison": ">="
                     }
                 ]
@@ -597,17 +660,15 @@
                 [
                     {
                         "type": "resource",
+                        "target": "money",
+                        "value": 15,
+                        "comparison": ">="
+                    },
+                    {
+                        "type": "resource",
                         "target": "power",
                         "value": 0,
                         "comparison": "<"
-                    }
-                ],
-                [
-                    {
-                        "type": "building_count",
-                        "target": "Power",
-                        "value": 2,
-                        "comparison": ">="
                     }
                 ]
             ]
@@ -625,13 +686,13 @@
                     {
                         "type": "resource",
                         "target": "money",
-                        "value": 25,
+                        "value": 40,
                         "comparison": ">="
                     },
                     {
                         "type": "resource",
                         "target": "happiness",
-                        "value": 55,
+                        "value": 60,
                         "comparison": ">="
                     }
                 ]
