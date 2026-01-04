@@ -27,9 +27,9 @@ export function GamePage() {
                 </button>
 
                 <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent mb-1">
-                    CITY MATCHER
+                    MERGECORE
                 </h1>
-                <p className="text-slate-400 text-sm">Build, Merge, and Survive.</p>
+                <p className="text-slate-400 text-sm">Minimalist city building with a satisfying merge flow.</p>
             </header>
 
             {/* Main Layout Area */}
