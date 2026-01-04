@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
-import type { GameData, CityState, Cell } from '../types';
+import type { GameData, CityState, Cell, SimulationStats } from '../types';
 import { BuildingType } from '../types';
 import GAME_DATA_JSON from '../config/gameData.json';
 import { createGrid, resolveMerge } from '../logic/grid';
@@ -7,11 +7,14 @@ import { runSimulation } from '../logic/simulation';
 
 import { STARTING_CITY } from '../config/buildingStats';
 
-// Type assertion for the imported JSON to match our interface
-const INITIAL_DATA = {
-    ...GAME_DATA_JSON,
-    statusEffects: (GAME_DATA_JSON as any).statusEffects || []
-} as unknown as GameData;
+const createInitialGameData = (): GameData => {
+    const cloned = structuredClone(GAME_DATA_JSON) as Partial<GameData>;
+    return {
+        startingCity: STARTING_CITY,
+        ...cloned,
+        statusEffects: cloned.statusEffects ?? []
+    } as GameData;
+};
 
 interface DesignerContextType {
     gameData: GameData;
@@ -48,24 +51,21 @@ const DesignerContext = createContext<DesignerContextType | undefined>(undefined
 
 export function DesignerProvider({ children }: PropsWithChildren) {
     // Designer maintains its own mutable copy of game data
-    const [gameData, setGameData] = useState<GameData>(INITIAL_DATA);
-
-    // Initial check to ensure statusEffects is present if state somehow got stale
-    if (!gameData.statusEffects) {
-        // Force update if missing
-        gameData.statusEffects = [];
-    }
+    const [gameData, setGameData] = useState<GameData>(() => createInitialGameData());
 
     // Sandbox simulation state
     const [sandboxCity, setSandboxCity] = useState<CityState>({ ...STARTING_CITY });
     const [sandboxGrid, setSandboxGrid] = useState<Cell[][]>(createGrid());
-    const [simulationStats, setSimulationStats] = useState<any>(null); // Type lazily for now or import
+    const [simulationStats, setSimulationStats] = useState<SimulationStats | null>(null);
 
     // Current UI selection
     const [selection, setSelection] = useState<DesignerSelection | null>(null);
 
     const updateGameData = (newData: GameData) => {
-        setGameData(newData);
+        setGameData({
+            ...newData,
+            statusEffects: newData.statusEffects ?? []
+        });
     };
 
     const updateSandboxCity = (newCity: CityState) => {
@@ -73,7 +73,7 @@ export function DesignerProvider({ children }: PropsWithChildren) {
     };
 
     const resetSandbox = () => {
-        setGameData(INITIAL_DATA);
+        setGameData(createInitialGameData());
         resetCityOnly();
     };
 
