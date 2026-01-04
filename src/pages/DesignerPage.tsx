@@ -24,7 +24,7 @@ function DesignerContent() {
                             <Home size={20} />
                         </button>
                         <h1 className="font-bold text-lg text-slate-200">
-                            <span className="text-emerald-500">CityMatcher</span> Designer
+                            <span className="text-emerald-500">Mergecore</span> Designer
                         </h1>
                     </div>
                     <div className="flex items-center gap-4">
