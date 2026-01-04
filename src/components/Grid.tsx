@@ -94,9 +94,6 @@ export const Grid: React.FC = () => {
                                 onMouseEnter={() => setHoveredPos({ r: cell.r, c: cell.c })}
                                 onMouseLeave={() => {
                                     setHoveredPos(null);
-                                    // if (isSelected) setSelectedPos(null); 
-                                    // actually just clear it always to be safe/simple, or only if this cell was the selected one?
-                                    // simpler: if (isSelected) setSelectedPos(null);
                                     if (isSelected) {
                                         setSelectedPos(null);
                                     }
