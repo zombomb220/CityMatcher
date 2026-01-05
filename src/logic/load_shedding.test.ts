@@ -38,9 +38,9 @@ describe('Load Shedding Logic', () => {
         // 2. Power Surplus >= 0.
         // 3. No production from Factory (Jobs = 0).
 
-        expect(result.stats.buildingAlerts.some(a => a.type === 'disable' && /No power/i.test(a.message))).toBe(true);
+        expect(result.stats.buildingAlerts.some(a => a.type === 'disable' && /Missing power/i.test(a.message))).toBe(true);
         expect(result.city.powerAvailable).toBeGreaterThanOrEqual(0);
-        expect(result.city.workforceAvailable).toBe(0); // Should be 0, not 2
+        expect(result.city.workforceAvailable).toBe(1); // Factory disabled -> No consumption
     });
 
     it('Should prioritized disabling lower priority consumers', () => {

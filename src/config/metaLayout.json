@@ -1,0 +1,394 @@
+{
+    "city_01_plains": {
+        "id": "city_01_plains",
+        "name": "Alpha Prime",
+        "description": "We made landfall at dawn. The plains are fertile and the atmosphere is breathable. A perfect foundation for the first colony.",
+        "baseBudget": 1200,
+        "coordinates": {
+            "x": 50,
+            "y": 20
+        },
+        "connections": [
+            "city_02_hills"
+        ],
+        "thresholds": [
+            {
+                "id": "c1_t1_pop",
+                "resource": "population",
+                "value": 50,
+                "reward": {
+                    "type": "modifier",
+                    "value": "pop_growth",
+                    "description": "Colonial Mandate: Pop Growth +10%"
+                }
+            },
+            {
+                "id": "c1_t2_money",
+                "resource": "money",
+                "value": 2500,
+                "reward": {
+                    "type": "budget_bonus",
+                    "value": 500,
+                    "description": "Resupply Drop: Budget +500"
+                }
+            },
+            {
+                "id": "c1_t3_raw",
+                "resource": "raw_goods",
+                "value": 200,
+                "reward": {
+                    "type": "unlock_node",
+                    "value": "city_02_hills",
+                    "description": "Scan Data: Beta Mining"
+                }
+            }
+        ],
+        "debug_initial_progress": {
+            "completed": true,
+            "runCount": 1,
+            "bestExports": {
+                "population": 60,
+                "money": 3000,
+                "raw_goods": 250
+            },
+            "unlockedThresholdIds": [
+                "c1_t1_pop",
+                "c1_t2_money",
+                "c1_t3_raw"
+            ]
+        }
+    },
+    "city_02_hills": {
+        "id": "city_02_hills",
+        "name": "Beta Mining",
+        "description": "Sensors picked up the mineral signatures from orbit. The terrain is jagged and unforgiving, but the potential wealth beneath the crust is staggering.",
+        "baseBudget": 1500,
+        "coordinates": {
+            "x": 79,
+            "y": 41
+        },
+        "connections": [
+            "city_03_coast"
+        ],
+        "thresholds": [
+            {
+                "id": "c2_t1_raw",
+                "resource": "raw_goods",
+                "value": 800,
+                "reward": {
+                    "type": "unlock_node",
+                    "value": "mine_t2",
+                    "description": "Schematic: Deep Core Miner"
+                }
+            },
+            {
+                "id": "c2_t2_money",
+                "resource": "money",
+                "value": 6000,
+                "reward": {
+                    "type": "budget_bonus",
+                    "value": 1000,
+                    "description": "Investor Funding: Budget +1000"
+                }
+            },
+            {
+                "id": "c2_t3_products",
+                "resource": "products",
+                "value": 300,
+                "reward": {
+                    "type": "modifier",
+                    "value": "production_eff",
+                    "description": "Refinery Overclock: Efficiency +15%"
+                }
+            }
+        ],
+        "debug_initial_progress": {
+            "completed": false,
+            "runCount": 2,
+            "bestExports": {
+                "raw_goods": 400
+            },
+            "unlockedThresholdIds": []
+        }
+    },
+    "city_03_coast": {
+        "id": "city_03_coast",
+        "name": "Gamma Port",
+        "description": "A water world with scattered archipelagos. Establishing a logistics hub here will allow us to ship resources across the entire sector.",
+        "baseBudget": 2000,
+        "coordinates": {
+            "x": 68,
+            "y": 76
+        },
+        "connections": [
+            "city_04_desert"
+        ],
+        "thresholds": [
+            {
+                "id": "c3_t1_products",
+                "resource": "products",
+                "value": 500,
+                "reward": {
+                    "type": "modifier",
+                    "value": "export_rate",
+                    "description": "Trade Route: Export +15%"
+                }
+            },
+            {
+                "id": "c3_t2_happy",
+                "resource": "happiness",
+                "value": 90,
+                "reward": {
+                    "type": "unlock_node",
+                    "value": "park_t2",
+                    "description": "Schematic: Bio-Dome Park"
+                }
+            },
+            {
+                "id": "c3_t3_money",
+                "resource": "money",
+                "value": 12000,
+                "reward": {
+                    "type": "budget_bonus",
+                    "value": 2000,
+                    "description": "Commerce Guild Grant: +2000"
+                }
+            }
+        ]
+    },
+    "city_04_desert": {
+        "id": "city_04_desert",
+        "name": "Delta Dunes",
+        "description": "Surface temperatures are extreme, but the solar intensity is off the charts. We can turn this scorching wasteland into the system's power plant.",
+        "baseBudget": 2500,
+        "coordinates": {
+            "x": 32,
+            "y": 76
+        },
+        "connections": [
+            "city_05_tundra"
+        ],
+        "thresholds": [
+            {
+                "id": "c4_t1_power",
+                "resource": "power",
+                "value": 2000,
+                "reward": {
+                    "type": "modifier",
+                    "value": "solar_eff",
+                    "description": "Tech: Photovoltaic Cells (+25% Solar)"
+                }
+            },
+            {
+                "id": "c4_t2_money",
+                "resource": "money",
+                "value": 20000,
+                "reward": {
+                    "type": "budget_bonus",
+                    "value": 3000,
+                    "description": "Energy Consortium Grant: +3000"
+                }
+            },
+            {
+                "id": "c4_t3_pop",
+                "resource": "population",
+                "value": 300,
+                "reward": {
+                    "type": "unlock_node",
+                    "value": "city_05_tundra",
+                    "description": "Expedition: Epsilon Frost"
+                }
+            }
+        ]
+    },
+    "city_05_tundra": {
+        "id": "city_05_tundra",
+        "name": "Epsilon Frost",
+        "description": "The sensors were right; it's cold. Bitterly cold. But if we can endure the freeze, this outpost will secure our hold on the outer rim.",
+        "baseBudget": 3000,
+        "coordinates": {
+            "x": 21,
+            "y": 41
+        },
+        "connections": [
+            "city_01_plains"
+        ],
+        "thresholds": [
+            {
+                "id": "c5_t1_pop",
+                "resource": "population",
+                "value": 500,
+                "reward": {
+                    "type": "modifier",
+                    "value": "upkeep_red",
+                    "description": "Tech: Thermal Insulation (Upkeep -10%)"
+                }
+            },
+            {
+                "id": "c5_t2_products",
+                "resource": "products",
+                "value": 1000,
+                "reward": {
+                    "type": "unlock_node",
+                    "value": "void_01",
+                    "description": "Deep Space Scan: Asteroid Belt"
+                }
+            },
+            {
+                "id": "c5_t3_money",
+                "resource": "money",
+                "value": 50000,
+                "reward": {
+                    "type": "budget_bonus",
+                    "value": 10000,
+                    "description": "Corporate Sponsorship: Mega Budget"
+                }
+            }
+        ]
+    },
+    "void_01": {
+        "id": "void_01",
+        "name": "Asteroid Belt Alpha",
+        "description": "Densely packed and rich in heavy metals. Dangerous to navigate, but a miner's dream.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 50,
+            "y": 5
+        },
+        "connections": [
+            "city_01_plains"
+        ],
+        "thresholds": []
+    },
+    "void_02": {
+        "id": "void_02",
+        "name": "Nebula Outpost",
+        "description": "An abandoned research station drifting in the nebula clouds. Archives might contain lost tech.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 85,
+            "y": 15
+        },
+        "connections": [
+            "city_02_hills"
+        ],
+        "thresholds": []
+    },
+    "void_03": {
+        "id": "void_03",
+        "name": "Sector 7G",
+        "description": "Restricted military airspace. Long-range scans show automated defense platforms.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 95,
+            "y": 50
+        },
+        "connections": [
+            "city_02_hills",
+            "city_03_coast"
+        ],
+        "thresholds": []
+    },
+    "void_04": {
+        "id": "void_04",
+        "name": "Dark Star Region",
+        "description": "A collapsed star emitting high-frequency radiation. Sensors struggle to penetrate the interference.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 85,
+            "y": 85
+        },
+        "connections": [
+            "city_03_coast"
+        ],
+        "thresholds": []
+    },
+    "void_05": {
+        "id": "void_05",
+        "name": "Comet Tail",
+        "description": "We are passing through the tail of a massive comet. Harvesting the ice could solve our water crisis.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 50,
+            "y": 95
+        },
+        "connections": [
+            "city_03_coast",
+            "city_04_desert"
+        ],
+        "thresholds": []
+    },
+    "void_06": {
+        "id": "void_06",
+        "name": "Void Rift",
+        "description": "A spatial anomaly that defies standard physics. Gravity here is... wrong.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 15,
+            "y": 85
+        },
+        "connections": [
+            "city_04_desert"
+        ],
+        "thresholds": []
+    },
+    "void_07": {
+        "id": "void_07",
+        "name": "Lost Colony",
+        "description": "The signal logs end fifty years ago. There are structures down there, but no signs of life.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 5,
+            "y": 50
+        },
+        "connections": [
+            "city_04_desert",
+            "city_05_tundra"
+        ],
+        "thresholds": []
+    },
+    "void_08": {
+        "id": "void_08",
+        "name": "Ice Moon",
+        "description": "Orbiting a gas giant. The tidal forces cause constant quakes, but the geysers spew rare gases.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 15,
+            "y": 15
+        },
+        "connections": [
+            "city_05_tundra"
+        ],
+        "thresholds": []
+    },
+    "void_09": {
+        "id": "void_09",
+        "name": "Derelict Ship",
+        "description": "Ancient wreckage from an unknown civilization. It's massive, drifting silently in the void.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 30,
+            "y": 10
+        },
+        "connections": [
+            "city_01_plains",
+            "city_05_tundra"
+        ],
+        "thresholds": []
+    },
+    "void_10": {
+        "id": "void_10",
+        "name": "Signal Relay",
+        "description": "Allows communication with the core worlds. Crucial for calling in heavy equipment drops.",
+        "baseBudget": 0,
+        "coordinates": {
+            "x": 70,
+            "y": 10
+        },
+        "connections": [
+            "city_01_plains",
+            "city_02_hills"
+        ],
+        "thresholds": []
+    }
+}

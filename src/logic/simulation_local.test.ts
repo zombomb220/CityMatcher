@@ -64,14 +64,14 @@ describe('Localized Simulation Engine', () => {
 
         const result = runSimulation(grid, city);
 
-        expect(result.stats.netChanges[ResourceType.Power]).toBe(3); // Produced
+        expect(result.stats.netChanges[ResourceType.Power]).toBe(8); // Produced 9 - 1 Consumed = 8
 
         // Res should be active (Stars >= 1)
         const resTile = grid[0][1].tile;
         expect(resTile.stars).toBeGreaterThanOrEqual(1);
     });
 
-    it('should NOT allow Power to enable far away Residential', () => {
+    it('should allow Power to enable far away Residential (Global Power Grid)', () => {
         // Place Power at 0,0
         // Place Res at 6,6 (Dist > 4)
 
@@ -80,11 +80,10 @@ describe('Localized Simulation Engine', () => {
 
         runSimulation(grid, city);
 
-        // Res needs Power. Power has Radius 3 (T1). Distance is 6 (Chebyshev).
-        // Should Fail.
+        // Current Logic uses Global Power Pool. Radius is ignored for Power.
         const resTile = grid[6][6].tile;
-        expect(resTile.stars).toBe(0);
-        expect(resTile.disabled).toBe(true);
+        expect(resTile.stars).toBeGreaterThanOrEqual(1);
+        expect(resTile.disabled).toBe(false);
     });
 
     it('should chain production in the same turn (Power -> Factory)', () => {

@@ -3,16 +3,25 @@ import type { Cell, CityState, TurnSnapshot } from '../types';
 import { createGrid } from '../logic/grid';
 import { executePlaceBuilding } from '../logic/actions';
 import { STARTING_CITY, BLUEPRINT_SLOT_COSTS } from '../config/buildingStats';
+import { useMetaStore } from './metaStore';
+import { calculateRunExports } from '../logic/meta/exportEvaluator';
 
 interface GameState {
     grid: Cell[][];
     city: CityState;
     heldBlueprintId: string | null;
-    gameState: 'playing' | 'gameover';
+    gameState: 'playing' | 'gameover' | 'completed'; // Added 'completed'
     turnHistory: TurnSnapshot[];
+    error: string | null;
+
+    activeCityId: string | null; // NEW: Track which city scenario we are playing
 
     // Actions
     resetGame: () => void;
+    startCityRun: (cityId: string) => void; // NEW: Start a specific city
+    finishCityRun: () => void; // NEW: End run and save to meta
+
+    clearError: () => void;
     selectBlueprint: (id: string) => void;
     placeBuilding: (r: number, c: number) => void;
     clearNewUnlocks: () => void;
@@ -29,12 +38,14 @@ const cloneGrid = (grid: Cell[][]): Cell[][] => {
 };
 
 
-export const useGameStore = create<GameState>((set) => ({
+export const useGameStore = create<GameState>((set, get) => ({
     grid: createGrid(),
     city: { ...STARTING_CITY }, // Note: STARTING_CITY now includes blueprintState
     heldBlueprintId: null,
     gameState: 'playing',
     turnHistory: [],
+    error: null,
+    activeCityId: null,
 
     resetGame: () => {
         set({
@@ -43,8 +54,88 @@ export const useGameStore = create<GameState>((set) => ({
             heldBlueprintId: null,
             gameState: 'playing',
             turnHistory: [],
+            error: null,
+            activeCityId: null
         });
     },
+
+    startCityRun: (cityId: string) => {
+        const metaStore = useMetaStore.getState();
+        const config = metaStore.getCityConfig(cityId);
+
+        const initialCity = { ...STARTING_CITY };
+
+        // 1. Apply Base Config
+        if (config) {
+            initialCity.money = config.baseBudget;
+        }
+
+        // 2. Apply Global Rewards from Meta Progression
+        // Iterate through ALL cities and their thresholds.
+        // If unlocked, apply reward.
+        const allCities = Object.values(metaStore.cityProgress);
+        allCities.forEach(cityProgress => {
+            const cityConfig = metaStore.getCityConfig(cityProgress.cityId);
+            if (!cityConfig) return;
+
+            cityProgress.unlockedThresholdIds.forEach(tId => {
+                const threshold = cityConfig.thresholds.find(t => t.id === tId);
+                if (!threshold) return;
+
+                const r = threshold.reward;
+                if (r.type === 'budget_bonus') {
+                    // Accumulate Starting Budget
+                    initialCity.money += (r.value as number);
+                } else if (r.type === 'modifier') {
+                    const modName = r.value as string;
+                    // Map modifier names to actual mechanics
+                    if (modName === 'solar_efficiency' || modName === 'solar_eff') {
+                        initialCity.solarEfficiencyMultiplier = (initialCity.solarEfficiencyMultiplier || 1) + 0.25; // +25%
+                    } else if (modName === 'pop_growth') {
+                        initialCity.popGrowthMultiplier = (initialCity.popGrowthMultiplier || 1) + 0.10; // +10%
+                    } else if (modName === 'upkeep_red') {
+                        initialCity.upkeepMultiplier = (initialCity.upkeepMultiplier || 1) - 0.10; // -10%
+                    } else if (modName === 'export_rate') {
+                        initialCity.exportRateMultiplier = (initialCity.exportRateMultiplier || 1) + 0.15; // +15%
+                    }
+                } else if (r.type === 'unlock_node') {
+                    // Already unlocked? Or unlock globally?
+                    // "Unlock Supermarket".
+                    // Add to blueprintState.unlockedIds if not present.
+                    const bpId = r.value as string;
+                    if (!initialCity.blueprintState.unlockedIds.includes(bpId)) {
+                        initialCity.blueprintState.unlockedIds.push(bpId);
+                    }
+                }
+            });
+        });
+
+        set({
+            grid: createGrid(),
+            city: initialCity,
+            heldBlueprintId: null,
+            gameState: 'playing',
+            turnHistory: [],
+            error: null,
+            activeCityId: cityId
+        });
+    },
+
+    finishCityRun: () => {
+        const state = get();
+        if (!state.activeCityId) return;
+
+        // 1. Calculate Exports
+        const exports = calculateRunExports(state.city);
+
+        // 2. Save to Meta
+        useMetaStore.getState().updateCityProgress(state.activeCityId, exports);
+
+        // 3. Update State
+        set({ gameState: 'completed' });
+    },
+
+    clearError: () => set({ error: null }),
 
     clearNewUnlocks: () => {
         set((state) => ({
@@ -81,11 +172,15 @@ export const useGameStore = create<GameState>((set) => ({
                     grid: result.newGrid!,
                     city: result.newCity!,
                     heldBlueprintId: null,
-                    gameState: result.gameState!,
-                    turnHistory: [...state.turnHistory, result.snapshot!]
+                    gameState: result.gameState === 'gameover' ? 'gameover' : 'playing', // preserve logic
+                    turnHistory: [...state.turnHistory, result.snapshot!],
+                    error: null // Clear any previous error
+                };
+            } else {
+                return {
+                    error: result.failureReason || "Failed to place building."
                 };
             }
-            return state;
         });
     },
 
@@ -108,16 +203,7 @@ export const useGameStore = create<GameState>((set) => ({
     buyBlueprintSlot: () => {
         set((state) => {
             const currentSlots = state.city.blueprintState.maxSlots;
-            // Formula: Base * Multiplier ^ (Slots - InitialSlots?)
-            // Or just use count.
-            // "Increasing cost per slot".
-
-            // Simplification: Base + (ExtraSlots * Base * Multiplier)
-            // Or exponential.
-
-            // Let's use linear scaling for simplicity with the planned JSON.
-            // JSON: base: 10, multiplier: 1.5.
-            // Cost = Base * (Multiplier ^ (currentSlots - 5))? Assuming 5 is start.
+            // Formula: Base * (Multiplier ^ (Slots - InitialSlots))
             // Let's assume start is 5 (STARTING_CITY.blueprintState.maxSlots).
             const extra = Math.max(0, currentSlots - 5);
             const cost = Math.floor(BLUEPRINT_SLOT_COSTS.base * Math.pow(BLUEPRINT_SLOT_COSTS.multiplier, extra));

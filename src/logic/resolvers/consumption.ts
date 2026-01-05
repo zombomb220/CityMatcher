@@ -17,7 +17,8 @@ export const resolveConsumption = (
     tiles: { r: number, c: number, tile: Tile }[],
     trackChange: (res: string, amt: number, src: string) => void,
     buildingAlerts: any[]
-): void => {
+): { unmetPowerDemand: number } => {
+    let unmetPowerDemand = 0;
 
     // Helper: Sort by Priority
     const sortedTiles = [...tiles].sort((a, b) => {
@@ -64,17 +65,21 @@ export const resolveConsumption = (
                 if (res === ResourceType.Power) {
                     // Power is Global "Available" pool in City
                     if (city.powerAvailable < needed) return null;
+                    // Power is capacity-based now (per previous context?), or consumed?
+                    // "Power=9 (Used=0)". This implies consumption.
+                    // So we track usage.
                     transactions.push(() => {
                         city.powerAvailable -= needed;
-                        // stats.powerConsumed handled in main loop or via tracking?
-                        // We'll track it separately if needed, but trackChange is fine.
+                        trackChange(ResourceType.Power, -needed, tile.type);
                     });
                     continue;
                 }
                 if (res === ResourceType.Workforce) {
+                    // Workforce is capacity/pool based.
                     if (city.workforceAvailable < needed) return null;
                     transactions.push(() => {
                         city.workforceAvailable -= needed;
+                        trackChange(ResourceType.Workforce, -needed, tile.type);
                     });
                     continue;
                 }
@@ -86,6 +91,7 @@ export const resolveConsumption = (
                     needed -= take;
                     transactions.push(() => {
                         tile.storage![res]! -= take;
+                        trackChange(res, -take, tile.type);
                     });
                 }
 
@@ -101,6 +107,7 @@ export const resolveConsumption = (
                         needed -= take;
                         transactions.push(() => {
                             n.tile.producedThisTurn![res]! -= take;
+                            trackChange(res, -take, tile.type);
                         });
                     }
 
@@ -112,6 +119,7 @@ export const resolveConsumption = (
                         needed -= take;
                         transactions.push(() => {
                             n.tile.storage![res]! -= take;
+                            trackChange(res, -take, tile.type);
                         });
                     }
                 }
@@ -178,58 +186,20 @@ export const resolveConsumption = (
             tile.disabledReason = `Missing ${missingReason}`;
             buildingAlerts.push({ id: tile.id, type: 'disable', message: `Missing ${missingReason}` });
 
-            // If we failed, we might have produced output in Production Phase (Optimistic).
-            // Should we revoke it?
-            // "Zombie Production"
-            // If a Power Plant fails (no workers), it shouldn't produce power.
-            // But Production ran FIRST. Global power was added.
-            // This is a problem with "Production First".
-            // 
-            // Fix: If disabled, check `tile.producedThisTurn` and REVERT global/local changes?
-            // This is complex.
-            //
-            // Alternative: Production happens HERE, after confirmation.
-            // But strict requirement was "Consumption pulls from producedThisTurn".
-            //
-            // Let's implement Recalls for Global Resources if disabled.
-            // Local `producedThisTurn` is fine, we just wipe it.
-            //
-            // "Zombie" Fix:
-            // If tile.disabled, wipe `tile.producedThisTurn`.
-            // If it produced Global (Power/Money), deduct it back?
-            //
-            // We need to know what it produced to deduct it.
-            // Re-calculating production is safer.
+            // Track Unmet Power Demand for Brownout Logic
+            if (missingReason === ResourceType.Power || missingReason === 'power') {
+                const basePower = stats.baseRequirements?.power || 0;
+                unmetPowerDemand += basePower;
+            }
         }
     }
 
     // Cleanup Zombie Production
     for (const { tile } of tiles) {
         if (tile.disabled) {
-            // Wipe local production so neighbors don't take from a dead building next turn?
-            // Actually, if it produced this turn, and we are in consumption...
-            // A Neighbor might have ALREADY taken it (since we sort by priority).
-            // If Priority: Res(Workers) -> Shop(Products).
-            // Res produces Workers. Shop takes Workers.
-            // Res checks inputs (Power). Fails. Becomes disabled.
-            // But Shop already ate the workers!
-            //
-            // This implies "Production First" is correct for "Instant Chains".
-            // The fact that Res failed *later* means it strained to produce, succeeded, but then crashed?
-            // This is acceptable "Brownout" logic.
-            // "I worked this shift, but I'm quitting now."
-            // Next turn, it starts disabled (0 stars).
-            // 
-            // BUT: `production.ts` treats "Star 0" as "Star 1 Potential".
-            // So next turn it produces again.
-            // 
-            // This loop seems stable.
-            // Only issue: Power Plant produces Power. Factory uses Power. Power Plant fails Money.
-            // Power Plant disabled. But Factory stays valid?
-            // Yes, "Battery/Intertia".
-            // 
-            // We will accept Zombie Production for the current turn as "Inertia".
-            // Ensure `tile.producedThisTurn` is moved to Storage or Wasted in Storage Phase.
+            // We accept Zombie Production for inertia (see notes above)
         }
     }
+
+    return { unmetPowerDemand };
 };

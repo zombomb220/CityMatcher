@@ -104,7 +104,20 @@ export const resolveProduction = (
         const mult = getMultiplier(tile.type);
 
         for (const [res, baseAmount] of Object.entries(prodConfig)) {
-            const amount = Math.floor((baseAmount as number) * mult);
+            let amount = Math.floor((baseAmount as number) * mult);
+
+            // Apply Meta Rewards (City State Multipliers)
+            if (tile.type === 'Power' && res === ResourceType.Power) {
+                if (city.solarEfficiencyMultiplier && city.solarEfficiencyMultiplier !== 1) {
+                    amount = Math.floor(amount * city.solarEfficiencyMultiplier);
+                }
+            }
+            if (res === ResourceType.Population) {
+                if (city.popGrowthMultiplier && city.popGrowthMultiplier !== 1) {
+                    amount = Math.floor(amount * city.popGrowthMultiplier);
+                }
+            }
+
             if (amount <= 0) continue;
 
             // Global Resources -> Commit immediately
@@ -121,6 +134,7 @@ export const resolveProduction = (
                     city.population += amount;
                     city.workforceAvailable += amount; // Pop = Workforce
                     trackChange(ResourceType.Population, amount, tile.type);
+                    trackChange(ResourceType.Workforce, amount, tile.type);
                 } else if (res === ResourceType.Happiness) {
                     city.happiness += amount;
                     trackChange(ResourceType.Happiness, amount, tile.type);

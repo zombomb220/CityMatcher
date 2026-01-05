@@ -23,24 +23,29 @@ const cloneGrid = (grid: Cell[][]): Cell[][] => {
     })));
 };
 
+interface ValidationResult {
+    valid: boolean;
+    reason?: string;
+}
+
 export const canExecutePlaceBuilding = (
     city: CityState,
     grid: Cell[][],
     r: number,
     c: number,
     blueprintId: string | null
-): boolean => {
-    if (!blueprintId) return false;
-    if (city.blueprintState.hasPlacedThisTurn) return false;
+): ValidationResult => {
+    if (!blueprintId) return { valid: false, reason: "No blueprint selected." };
+    if (city.blueprintState.hasPlacedThisTurn) return { valid: false, reason: "Already placed a building this turn." };
 
     const blueprint = BLUEPRINTS[blueprintId];
-    if (!blueprint) return false;
+    if (!blueprint) return { valid: false, reason: "Invalid blueprint." };
 
-    if (city.money < (blueprint.buildCost || 0)) return false;
+    if (city.money < (blueprint.buildCost || 0)) return { valid: false, reason: `Not enough money (Need ${blueprint.buildCost}).` };
 
-    if (grid[r][c].tile) return false; // Occupied
+    if (grid[r][c].tile) return { valid: false, reason: "Space is occupied." };
 
-    return true;
+    return { valid: true };
 };
 
 export const executePlaceBuilding = (
@@ -50,10 +55,11 @@ export const executePlaceBuilding = (
     r: number,
     c: number,
     blueprintId: string
-): ActionPlaceResult => {
+): ActionPlaceResult & { failureReason?: string } => {
     // 1. Validate
-    if (!canExecutePlaceBuilding(currentCity, currentGrid, r, c, blueprintId)) {
-        return { success: false };
+    const validation = canExecutePlaceBuilding(currentCity, currentGrid, r, c, blueprintId);
+    if (!validation.valid) {
+        return { success: false, failureReason: validation.reason };
     }
 
     const blueprint = BLUEPRINTS[blueprintId];

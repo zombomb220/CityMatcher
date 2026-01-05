@@ -1,7 +1,7 @@
 
 import type { CityState, StatusEffectTrigger, SimulationStats } from '../../types';
 import { ResourceType } from '../../types';
-import { STATUS_EFFECTS, POPULATION_PARAMS } from '../../config/buildingStats';
+import { STATUS_EFFECTS, POPULATION_PARAMS, BUILDING_STATS } from '../../config/buildingStats';
 
 // Contract: Finalize Turn.
 // 1. Calculate Coverage/Unemployment.
@@ -16,11 +16,8 @@ const checkTrigger = (trigger: StatusEffectTrigger, city: CityState, buildingCou
     let targetValue = trigger.value;
     if (typeof targetValue === 'string') {
         if (targetValue === 'powerDemand') {
-            // Demand this turn = Consumed
-            actualValue = stats.powerConsumed;
-            // Logic check: "Power Capacity < Power Demand".
-            // If trigger.target is powerCapacity.
-            // We need to match target properly.
+            // Demand this turn
+            targetValue = stats.powerConsumed;
         }
         // ...
     }
@@ -55,11 +52,31 @@ export const finalizeTurn = (
     buildingCounts: Record<string, number>,
     netChanges: Record<string, number>,
     breakdown: any[],
-    buildingAlerts: any[]
+    buildingAlerts: any[],
+    unmetPowerDemand: number = 0,
+    tiles: { r: number, c: number, tile: any }[] = [] // Optional for tests not passing it
 ): { city: CityState, stats: SimulationStats } => {
 
     // 1. Calculate Stats
-    const powerDemand = city.powerCapacity - city.powerAvailable; // Consumed
+    // Consumed = Capacity - Available (Leftover)
+    const powerConsumed = city.powerCapacity - city.powerAvailable;
+    const powerDemand = powerConsumed + unmetPowerDemand; // Total Demand = Consumed + Failed
+
+    // --- Building Fixed Upkeep ---
+    let totalFixedUpkeep = 0;
+    for (const { tile } of tiles) {
+        // Need stats.
+        const stats = (BUILDING_STATS as any)[tile.type]?.[String(tile.tier)];
+        if (stats?.fixedCost?.money) {
+            totalFixedUpkeep += stats.fixedCost.money;
+        }
+    }
+
+    if (totalFixedUpkeep > 0) {
+        city.money -= totalFixedUpkeep;
+        netChanges[ResourceType.Money] = (netChanges[ResourceType.Money] || 0) - totalFixedUpkeep;
+        breakdown.push({ source: 'Building Upkeep', amount: -totalFixedUpkeep, resource: ResourceType.Money });
+    }
 
     // Coverage Logic
     // Jobs Coverage + Product Coverage
@@ -100,11 +117,28 @@ export const finalizeTurn = (
     // 1. Population Maintenance
     const maintRate = POPULATION_PARAMS.maintenancePerPop || 0.08;
     if (city.population > 0 && maintRate > 0) {
-        const maintenanceCost = Math.floor(city.population * maintRate);
+        let maintenanceCost = Math.floor(city.population * maintRate);
+
+        // Apply Meta Rewards (Upkeep Multiplier)
+        if (city.upkeepMultiplier && city.upkeepMultiplier !== 1) {
+            maintenanceCost = Math.floor(maintenanceCost * city.upkeepMultiplier);
+        }
+
         if (maintenanceCost > 0) {
             city.money -= maintenanceCost;
             netChanges[ResourceType.Money] = (netChanges[ResourceType.Money] || 0) - maintenanceCost;
             breakdown.push({ source: 'Maintenance', amount: -maintenanceCost, resource: ResourceType.Money });
+        }
+    }
+
+    // 2. Income Tax
+    const taxRate = POPULATION_PARAMS.taxPerPop || 0.25;
+    if (city.population > 0) {
+        const tax = Math.floor(city.population * taxRate);
+        if (tax > 0) {
+            city.money += tax;
+            netChanges[ResourceType.Money] = (netChanges[ResourceType.Money] || 0) + tax;
+            breakdown.push({ source: 'Income Tax', amount: tax, resource: ResourceType.Money });
         }
     }
 

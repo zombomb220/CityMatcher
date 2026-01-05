@@ -6,6 +6,7 @@ import { useGameStore } from '../store/gameStore';
 import { RotateCcw, PenTool } from 'lucide-react'; // Added PenTool for the icon
 import { useNavigate } from 'react-router-dom';
 import CopyStateButton from '../components/CopyStateButton';
+import { Toast } from '../components/Toast';
 
 export function GamePage() {
     const { gameState, resetGame } = useGameStore();
@@ -13,6 +14,7 @@ export function GamePage() {
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center py-6 sm:py-10 px-4 relative overflow-hidden">
+            <Toast />
             {/* Background decoration */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 -z-10 opacity-50" />
 
@@ -53,6 +55,14 @@ export function GamePage() {
                     >
                         <RotateCcw size={16} />
                         Restart
+                    </button>
+
+                    <button
+                        onClick={() => useGameStore.getState().finishCityRun()}
+                        className="flex items-center gap-2 px-4 py-2 mt-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-bold transition-colors border border-emerald-500 w-full justify-center shadow-lg transform hover:scale-105"
+                    >
+                        <span>✅</span>
+                        Complete City
                     </button>
 
                     <div className="mt-4 w-full">
