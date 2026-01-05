@@ -176,9 +176,10 @@ export const ProductionOverlay: React.FC<ProductionOverlayProps> = ({ tile }) =>
                 <div className="flex flex-col gap-3">
 
                     {/* Header / Name (Minimal) */}
-                    <div className="text-center border-b border-slate-800 pb-2">
+                    {/* Header / Name (Minimal) - REMOVED per user request */}
+                    {/* <div className="text-center border-b border-slate-800 pb-2">
                         <div className="font-bold text-slate-200 text-sm tracking-wide">{stats.produces ? "Production" : "Utility"}</div>
-                    </div>
+                    </div> */}
 
                     {/* INPUTS (Left/Center Flow) */}
                     <div className="space-y-1.5">
@@ -202,8 +203,8 @@ export const ProductionOverlay: React.FC<ProductionOverlayProps> = ({ tile }) =>
                                             <span className="text-slate-300 capitalize text-[11px]">{key.replace('_', ' ')}</span>
                                         </div>
                                         <div className="flex items-center gap-2 pl-3">
-                                            <span className={clsx("font-mono font-medium", isSatisfied ? "text-slate-400" : "text-red-400")}>
-                                                {isSatisfied ? "" : `${Math.floor(available)} / `}{reqAmount}
+                                            <span className={clsx("font-mono font-medium whitespace-nowrap", isSatisfied ? "text-slate-400" : "text-red-400")}>
+                                                {isSatisfied ? "" : `${Math.floor(available)}/`}{reqAmount}
                                             </span>
                                             {isSatisfied ? (
                                                 <span className="text-green-500 text-[10px]">✅</span>
