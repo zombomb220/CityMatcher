@@ -144,7 +144,7 @@
                     },
                     "3": {
                         "power": 6,
-                        "workforce": 3
+                        "workforce": 4
                     }
                 },
                 "produces": {
@@ -401,8 +401,12 @@
                     "money": 1
                 },
                 "starRequirements": {
-                    "2": {},
-                    "3": {}
+                    "2": {
+                        "money": 10
+                    },
+                    "3": {
+                        "money": 2000
+                    }
                 },
                 "produces": {
                     "1": {

@@ -133,7 +133,7 @@ describe('Forecast & Core System Tests', () => {
 
             // Idle Cost
             // Check breakdown
-            const idleEntry = stats.breakdown.find(b => b.source === 'Power Idle Cost');
+            const idleEntry = stats.breakdown.find(b => b.source === 'Grid Inefficiency');
             expect(idleEntry).toBeDefined();
             expect(idleEntry?.amount).toBeLessThan(0);
         });

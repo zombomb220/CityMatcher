@@ -51,7 +51,10 @@ export const ResourceSidebar: React.FC = () => {
 
     const activeEffectsList = useMemo(() => {
         const ids = city.activeStatusEffects || [];
-        return ids.map(id => STATUS_EFFECTS.find(e => e.id === id)).filter(Boolean);
+        console.log('[Sidebar] Active Effect IDs:', ids);
+        const effects = ids.map(id => STATUS_EFFECTS.find(e => e.id === id)).filter(e => !!e);
+        console.log('[Sidebar] Resolved Effects:', effects);
+        return effects;
     }, [city.activeStatusEffects]);
 
     // Helper: Resource Row with Inline Warnings
@@ -336,14 +339,21 @@ export const ResourceSidebar: React.FC = () => {
                             {hoveredResource.label} Breakdown
                         </div>
                         <div className="space-y-1">
-                            {hoveredResource.breakdown.map((item: any, i: number) => (
-                                <div key={i} className="flex justify-between text-xs">
-                                    <span className="text-slate-400 truncate pr-2">{item.source}</span>
-                                    <span className={clsx("font-mono", item.amount > 0 ? "text-green-400" : "text-red-400")}>
-                                        {item.amount > 0 ? '+' : ''}{item.amount}
-                                    </span>
-                                </div>
-                            ))}
+                            {(() => {
+                                const aggregated = hoveredResource.breakdown.reduce((acc: Record<string, number>, item: any) => {
+                                    acc[item.source] = (acc[item.source] || 0) + item.amount;
+                                    return acc;
+                                }, {});
+
+                                return Object.entries(aggregated).map(([source, amount]) => (
+                                    <div key={source} className="flex justify-between text-xs">
+                                        <span className="text-slate-400 truncate pr-2">{source}</span>
+                                        <span className={clsx("font-mono", (amount as number) > 0 ? "text-green-400" : "text-red-400")}>
+                                            {(amount as number) > 0 ? '+' : ''}{amount as number}
+                                        </span>
+                                    </div>
+                                ));
+                            })()}
                         </div>
                     </div>
                 )

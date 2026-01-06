@@ -27,9 +27,31 @@ vi.mock('../config/buildingStats', () => ({
         }
     },
     POPULATION_PARAMS: {
-        productConsumptionRate: 0
+        productConsumptionRate: 0,
+        taxPerPop: 0.25,
+        maintenancePerPop: 0.08
     },
-    STATUS_EFFECTS: []
+    STATUS_EFFECTS: [],
+    BUILDING_STATS: {
+        "Power": {
+            "1": {
+                "baseRequirements": { "money": 1 },
+                "produces": { "1": { "power": 3 } },
+                "priority": 0
+            }
+        },
+        "Residential": {
+            "1": {
+                "baseRequirements": { "power": 1 },
+                "produces": { "1": { "population": 25 } },
+                "priority": 3
+            }
+        }
+    },
+    PRODUCT_PARAMS: {
+        spoilageThreshold: 24,
+        decayRate: 0.05
+    }
 }));
 
 const createEmptyGrid = (): Cell[][] => {
@@ -50,7 +72,17 @@ describe('Tax and Power Balance', () => {
 
     it('collects tax from population', () => {
         const grid = createEmptyGrid();
-        // Setup a city with population but no buildings
+        // Place 4 Residentials (Mock prod 25 each -> 100 Total Pop)
+        for (let i = 0; i < 4; i++) {
+            grid[0][i].tile = {
+                id: `r_${i}`,
+                type: BuildingType.Residential,
+                tier: 1,
+                stars: 1
+            };
+        }
+
+        // Setup city (Money 100). Population will be overwritten by production.
         const city = setupCity(100, 100);
         // Tax per pop is 0.25 (from gameData.json)
         // Expected Tax: 100 * 0.25 = 25
@@ -61,7 +93,7 @@ describe('Tax and Power Balance', () => {
         const { city: nextCity, stats } = runSimulation(grid, city);
 
         // Check breakdown if available, or just net money
-        const taxEntry = stats.breakdown.find(b => b.source === 'Tax');
+        const taxEntry = stats.breakdown.find(b => b.source === 'Income Tax');
 
         // Assertions - EXPECT TO FAIL initially if logic is missing
         expect(taxEntry).toBeDefined();
@@ -106,6 +138,6 @@ describe('Tax and Power Balance', () => {
         const idleEntry = stats.breakdown.find(b => b.source === 'Grid Inefficiency');
 
         expect(idleEntry).toBeDefined();
-        expect(idleEntry?.amount).toBe(-1);
+        expect(idleEntry?.amount).toBe(-2);
     });
 });

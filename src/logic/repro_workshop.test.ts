@@ -16,8 +16,8 @@ describe('Workshop Placement Repro', () => {
     });
 
     it('should allow placing a Residential building', () => {
-        const canPlace = canExecutePlaceBuilding(city, grid, 0, 0, 'residential_t1');
-        expect(canPlace).toBe(true);
+        const validation = canExecutePlaceBuilding(city, grid, 0, 0, 'residential_t1');
+        expect(validation.valid).toBe(true);
 
         const result = executePlaceBuilding(city, grid, [], 0, 0, 'residential_t1');
         expect(result.success).toBe(true);
@@ -29,8 +29,8 @@ describe('Workshop Placement Repro', () => {
         console.log('Workshop Blueprint:', BLUEPRINTS['factory_t1']);
         expect(BLUEPRINTS['factory_t1']).toBeDefined();
 
-        const canPlace = canExecutePlaceBuilding(city, grid, 0, 1, 'factory_t1');
-        expect(canPlace).toBe(true);
+        const validation = canExecutePlaceBuilding(city, grid, 0, 1, 'factory_t1');
+        expect(validation.valid).toBe(true);
 
         const result = executePlaceBuilding(city, grid, [], 0, 1, 'factory_t1');
         expect(result.success).toBe(true);

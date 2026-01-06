@@ -16,11 +16,13 @@ export const resolveStorage = (
 
     // 1. Check Export Capability
     // Warehouse Tier 3 enables exports.
+    // Warehouse Tier 3 enables exports.
     const hasExportHub = tiles.some(t =>
         t.tile.type === BuildingType.Warehouse && t.tile.tier >= 3 && !t.tile.disabled
     );
 
-    const EXPORT_RATE = 0.5; // Money per unit
+    const BASE_EXPORT_RATE = 0.5; // Money per unit
+    const EXPORT_RATE = BASE_EXPORT_RATE * (city.exportRateMultiplier || 1);
 
     for (const { tile } of tiles) {
         // Initialize storage if missing

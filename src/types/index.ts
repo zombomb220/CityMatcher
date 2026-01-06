@@ -100,6 +100,10 @@ export interface CityState {
     };
     history: HistoryEntry[];
     blueprintState: BlueprintState;
+    exportRateMultiplier?: number;
+    solarEfficiencyMultiplier?: number;
+    upkeepMultiplier?: number;
+    popGrowthMultiplier?: number;
 }
 
 export type UnlockConditionType = 'resource' | 'stat' | 'turn' | 'building_count' | 'event';

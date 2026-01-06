@@ -64,7 +64,7 @@ export const runSimulation = (grid: Cell[][], currentCity: CityState): Simulatio
     // 4. Consumption Phase (Satisfy Demands)
     // - Consumes from Neighbors (producedThisTurn > storage).
     // - Updates tile.stars / tile.disabled.
-    resolveConsumption(city, grid, tiles, trackChange, buildingAlerts);
+    const { unmetPowerDemand } = resolveConsumption(city, grid, tiles, trackChange, buildingAlerts);
 
     // 5. Storage Phase (Logistics & Export)
     // - Moves producedThisTurn -> storage.
@@ -94,7 +94,10 @@ export const runSimulation = (grid: Cell[][], currentCity: CityState): Simulatio
     city.rawGoodsAvailable = totalRaw;
     city.productsAvailable = totalProducts;
 
-    const result = finalizeTurn(city, buildingCounts, netChanges, breakdown, buildingAlerts);
+    // Unemployed = Workforce Remaining after Consumption
+    city.unemployed = city.workforceAvailable;
+
+    const result = finalizeTurn(city, buildingCounts, netChanges, breakdown, buildingAlerts, unmetPowerDemand, tiles);
 
     // 7. Unlocks
     const newUnlocks = checkUnlockConditions(result.city, buildingCounts);

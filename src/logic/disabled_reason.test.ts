@@ -47,7 +47,7 @@ describe('Disabled Reason Logic', () => {
 
         const tile = grid[0][0].tile;
         expect(tile?.disabled).toBe(true);
-        expect(tile?.disabledReason).toBe('power');
+        expect(tile?.disabledReason).toBe('Missing power');
         expect(tile?.stars).toBe(0);
         // Since disabled, factory consumes 0.
         expect(res.city.powerAvailable).toBe(0);
@@ -64,7 +64,7 @@ describe('Disabled Reason Logic', () => {
 
         const factory = grid[0][0].tile;
         expect(factory?.disabled).toBe(true);
-        expect(factory?.disabledReason).toBe('workforce');
+        expect(factory?.disabledReason).toBe('Missing workforce');
         expect(res.city.workforceAvailable).toBe(0);
     });
 });
