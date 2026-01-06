@@ -1,15 +1,17 @@
 import React from 'react';
 import { useMetaStore } from '../../store/metaStore';
-import type { CityConfig } from '../../types/metaTypes';
-import { useGameStore } from '../../store/gameStore';
+
+
 
 interface RightSidebarProps {
-    selectedNode: CityConfig | null;
+    selectedCityId: string | null;
+    onEnterCity: (cityId: string) => void;
+    onClose: () => void;
 }
 
-export const RightSidebar: React.FC<RightSidebarProps> = ({ selectedNode }) => {
+export const RightSidebar: React.FC<RightSidebarProps> = ({ selectedCityId, onEnterCity, onClose }) => {
     const metaState = useMetaStore();
-    const startCityRun = useGameStore(state => state.startCityRun);
+    const selectedNode = selectedCityId ? metaState.getCityConfig(selectedCityId) || null : null;
 
     if (!selectedNode) {
         return (
@@ -25,7 +27,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({ selectedNode }) => {
 
     return (
         <div className="fixed right-0 top-0 bottom-0 w-80 bg-slate-900/95 backdrop-blur-sm border-l border-slate-700 p-6 text-slate-100 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-            <h2 className="text-2xl font-bold mb-2">{selectedNode.name}</h2>
+            <div className="flex justify-between items-start mb-2">
+                <h2 className="text-2xl font-bold">{selectedNode.name}</h2>
+                <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors">✕</button>
+            </div>
             <p className="text-sm text-slate-400 mb-6">{selectedNode.description}</p>
 
             <div className="mb-6 bg-slate-800 p-4 rounded-lg">
@@ -73,7 +78,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({ selectedNode }) => {
             </div>
 
             <button
-                onClick={() => startCityRun(selectedNode.id)}
+                onClick={() => onEnterCity(selectedNode.id)}
                 className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-colors shadow-lg"
             >
                 {progress ? 'Replay City' : 'Start City'}
@@ -95,7 +100,7 @@ export const LeftSidebar: React.FC = () => {
             {/* Pointer events none allows clicking through to map if needed, but sidebar content needs pointer-events-auto */}
             <div className="pointer-events-auto h-full flex flex-col">
                 <h1 className="text-xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-8">
-                    MERGECORE META
+                    MERGECORP OPERATIONS
                 </h1>
 
                 <div className="space-y-6">

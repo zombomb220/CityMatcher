@@ -5,6 +5,7 @@ import { executePlaceBuilding } from '../logic/actions';
 import { STARTING_CITY, BLUEPRINT_SLOT_COSTS } from '../config/buildingStats';
 import { useMetaStore } from './metaStore';
 import { calculateRunExports } from '../logic/meta/exportEvaluator';
+import { BLUEPRINTS } from '../config/blueprints';
 
 interface GameState {
     grid: Cell[][];
@@ -98,13 +99,19 @@ export const useGameStore = create<GameState>((set, get) => ({
                     } else if (modName === 'export_rate') {
                         initialCity.exportRateMultiplier = (initialCity.exportRateMultiplier || 1) + 0.15; // +15%
                     }
+
                 } else if (r.type === 'unlock_node') {
                     // Already unlocked? Or unlock globally?
                     // "Unlock Supermarket".
                     // Add to blueprintState.unlockedIds if not present.
                     const bpId = r.value as string;
-                    if (!initialCity.blueprintState.unlockedIds.includes(bpId)) {
-                        initialCity.blueprintState.unlockedIds.push(bpId);
+
+                    // FILTER: Only add if it is a valid Blueprint.
+                    // Some 'unlock_node' rewards are for Map Nodes (e.g. "city_02_hills"), which are not blueprints.
+                    if (BLUEPRINTS[bpId]) {
+                        if (!initialCity.blueprintState.unlockedIds.includes(bpId)) {
+                            initialCity.blueprintState.unlockedIds.push(bpId);
+                        }
                     }
                 }
             });

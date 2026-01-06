@@ -1,4 +1,5 @@
-
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import { BuildMenu } from '../components/BuildMenu';
 import { Grid } from '../components/Grid';
 import { ResourceSidebar } from '../components/ResourceSidebar';
@@ -9,8 +10,26 @@ import CopyStateButton from '../components/CopyStateButton';
 import { Toast } from '../components/Toast';
 
 export function GamePage() {
-    const { gameState, resetGame } = useGameStore();
+    const { gameState, resetGame, startCityRun } = useGameStore();
     const navigate = useNavigate();
+    const { cityId } = useParams<{ cityId: string }>();
+
+    React.useEffect(() => {
+        if (cityId) {
+            // Check if we need to initialize/switch city
+            const currentGameCityId = useGameStore.getState().activeCityId;
+            if (currentGameCityId !== cityId) {
+                // Initialize new run for this city
+                startCityRun(cityId);
+            }
+        }
+    }, [cityId]);
+
+    // Redirect to operations if no cityId
+    if (!cityId) {
+        navigate('/operations');
+        return null;
+    }
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center py-6 sm:py-10 px-4 relative overflow-hidden">
@@ -29,7 +48,7 @@ export function GamePage() {
                 </button>
 
                 <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent mb-1">
-                    MERGECORE
+                    MERGECORP
                 </h1>
                 <p className="text-slate-400 text-sm">Minimalist city building with a satisfying merge flow.</p>
             </header>

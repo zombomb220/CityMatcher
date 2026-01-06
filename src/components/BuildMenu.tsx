@@ -10,7 +10,11 @@ export const BuildMenu: React.FC = () => {
     const { unlockedIds, maxSlots, newUnlocks } = city.blueprintState;
 
     const lockedBlueprints = Object.values(BLUEPRINTS).filter(bp => !unlockedIds.includes(bp.id));
-    const activeBlueprints = unlockedIds.map(id => BLUEPRINTS[id]);
+    const activeBlueprints = unlockedIds.map(id => {
+        const bp = BLUEPRINTS[id];
+        if (!bp) console.error(`[BuildMenu] CRITICAL: Blueprint ID '${id}' found in unlock list but missing from registry!`);
+        return bp;
+    }).filter(Boolean);
 
     const getIcon = (type: string) => {
         switch (type) {

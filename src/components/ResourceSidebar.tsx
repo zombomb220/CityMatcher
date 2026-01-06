@@ -51,7 +51,10 @@ export const ResourceSidebar: React.FC = () => {
 
     const activeEffectsList = useMemo(() => {
         const ids = city.activeStatusEffects || [];
-        return ids.map(id => STATUS_EFFECTS.find(e => e.id === id)).filter(Boolean);
+        console.log('[Sidebar] Active Effect IDs:', ids);
+        const effects = ids.map(id => STATUS_EFFECTS.find(e => e.id === id)).filter(e => !!e);
+        console.log('[Sidebar] Resolved Effects:', effects);
+        return effects;
     }, [city.activeStatusEffects]);
 
     // Helper: Resource Row with Inline Warnings
