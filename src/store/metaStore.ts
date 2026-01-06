@@ -88,6 +88,7 @@ export const useMetaStore = create<MetaState>()(
                     newBestExports.products = Math.max(newBestExports.products, exports.products);
                     newBestExports.power = Math.max(newBestExports.power, exports.power);
                     newBestExports.happiness = Math.max(newBestExports.happiness, exports.happiness);
+                    newBestExports.population = Math.max(newBestExports.population, exports.population);
 
                     // 2. Check Unlocks
                     const newUnlocks = [...currentProgress.unlockedThresholdIds];
